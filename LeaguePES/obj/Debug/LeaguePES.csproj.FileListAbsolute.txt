@@ -7,3 +7,12 @@ D:\projects\LeaguePES\LeaguePES\obj\Debug\LeaguePES.Properties.Resources.resourc
 D:\projects\LeaguePES\LeaguePES\obj\Debug\LeaguePES.csproj.GenerateResource.cache
 D:\projects\LeaguePES\LeaguePES\obj\Debug\LeaguePES.exe
 D:\projects\LeaguePES\LeaguePES\obj\Debug\LeaguePES.pdb
+C:\Users\us\Desktop\league-pes\LeaguePES\bin\Debug\LeaguePES.exe.config
+C:\Users\us\Desktop\league-pes\LeaguePES\bin\Debug\LeaguePES.exe
+C:\Users\us\Desktop\league-pes\LeaguePES\bin\Debug\LeaguePES.pdb
+C:\Users\us\Desktop\league-pes\LeaguePES\obj\Debug\LeaguePES.csprojAssemblyReference.cache
+C:\Users\us\Desktop\league-pes\LeaguePES\obj\Debug\LeaguePES.Form1.resources
+C:\Users\us\Desktop\league-pes\LeaguePES\obj\Debug\LeaguePES.Properties.Resources.resources
+C:\Users\us\Desktop\league-pes\LeaguePES\obj\Debug\LeaguePES.csproj.GenerateResource.cache
+C:\Users\us\Desktop\league-pes\LeaguePES\obj\Debug\LeaguePES.exe
+C:\Users\us\Desktop\league-pes\LeaguePES\obj\Debug\LeaguePES.pdb

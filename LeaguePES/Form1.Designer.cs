@@ -30,6 +30,11 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label201 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.label203 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label199 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label30 = new System.Windows.Forms.Label();
@@ -132,9 +137,6 @@
             this.label18 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.label199 = new System.Windows.Forms.Label();
-            this.label200 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
@@ -235,18 +237,15 @@
             this.label196 = new System.Windows.Forms.Label();
             this.label197 = new System.Windows.Forms.Label();
             this.label198 = new System.Windows.Forms.Label();
-            this.label201 = new System.Windows.Forms.Label();
+            this.label200 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.label202 = new System.Windows.Forms.Label();
-            this.label203 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
-            this.panel2.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -265,6 +264,7 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.tabPage1.Controls.Add(this.tableLayoutPanel3);
             this.tabPage1.Controls.Add(this.label201);
             this.tabPage1.Controls.Add(this.panel1);
             this.tabPage1.Controls.Add(this.label199);
@@ -277,6 +277,57 @@
             this.tabPage1.Size = new System.Drawing.Size(954, 394);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Высшая лига";
+            // 
+            // label201
+            // 
+            this.label201.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label201.AutoSize = true;
+            this.label201.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label201.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label201.Location = new System.Drawing.Point(723, 23);
+            this.label201.Name = "label201";
+            this.label201.Size = new System.Drawing.Size(90, 18);
+            this.label201.TabIndex = 60;
+            this.label201.Text = "Расписание";
+            // 
+            // panel1
+            // 
+            this.panel1.Location = new System.Drawing.Point(611, 61);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(311, 276);
+            this.panel1.TabIndex = 59;
+            // 
+            // label203
+            // 
+            this.label203.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label203.AutoSize = true;
+            this.label203.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label203.Location = new System.Drawing.Point(214, 10);
+            this.label203.Name = "label203";
+            this.label203.Size = new System.Drawing.Size(62, 18);
+            this.label203.TabIndex = 1;
+            this.label203.Text = "label203";
+            // 
+            // textBox2
+            // 
+            this.textBox2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBox2.Location = new System.Drawing.Point(145, 7);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(32, 24);
+            this.textBox2.TabIndex = 3;
+            // 
+            // label199
+            // 
+            this.label199.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label199.AutoSize = true;
+            this.label199.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label199.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.label199.Location = new System.Drawing.Point(237, 21);
+            this.label199.Name = "label199";
+            this.label199.Size = new System.Drawing.Size(138, 20);
+            this.label199.TabIndex = 57;
+            this.label199.Text = "ВЫСШАЯ ЛИГА";
             // 
             // button1
             // 
@@ -299,7 +350,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 84F));
             this.tableLayoutPanel1.Controls.Add(this.label30, 6, 1);
             this.tableLayoutPanel1.Controls.Add(this.label14, 5, 1);
             this.tableLayoutPanel1.Controls.Add(this.label31, 3, 1);
@@ -1517,38 +1568,6 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Вторая лига";
             // 
-            // label199
-            // 
-            this.label199.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label199.AutoSize = true;
-            this.label199.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label199.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.label199.Location = new System.Drawing.Point(237, 21);
-            this.label199.Name = "label199";
-            this.label199.Size = new System.Drawing.Size(138, 20);
-            this.label199.TabIndex = 57;
-            this.label199.Text = "ВЫСШАЯ ЛИГА";
-            // 
-            // label200
-            // 
-            this.label200.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label200.AutoSize = true;
-            this.label200.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label200.ForeColor = System.Drawing.Color.Maroon;
-            this.label200.Location = new System.Drawing.Point(237, 22);
-            this.label200.Name = "label200";
-            this.label200.Size = new System.Drawing.Size(132, 20);
-            this.label200.TabIndex = 58;
-            this.label200.Text = "ВТОРАЯ ЛИГА";
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.panel2);
-            this.panel1.Location = new System.Drawing.Point(611, 61);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(311, 276);
-            this.panel1.TabIndex = 59;
-            // 
             // tableLayoutPanel2
             // 
             this.tableLayoutPanel2.ColumnCount = 9;
@@ -1560,7 +1579,7 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 84F));
             this.tableLayoutPanel2.Controls.Add(this.label15, 6, 1);
             this.tableLayoutPanel2.Controls.Add(this.label16, 5, 1);
             this.tableLayoutPanel2.Controls.Add(this.label17, 3, 1);
@@ -2766,58 +2785,46 @@
             this.label198.TabIndex = 18;
             this.label198.Text = "И";
             // 
-            // label201
+            // label200
             // 
-            this.label201.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label201.AutoSize = true;
-            this.label201.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label201.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label201.Location = new System.Drawing.Point(723, 23);
-            this.label201.Name = "label201";
-            this.label201.Size = new System.Drawing.Size(90, 18);
-            this.label201.TabIndex = 60;
-            this.label201.Text = "Расписание";
+            this.label200.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label200.AutoSize = true;
+            this.label200.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label200.ForeColor = System.Drawing.Color.Maroon;
+            this.label200.Location = new System.Drawing.Point(237, 22);
+            this.label200.Name = "label200";
+            this.label200.Size = new System.Drawing.Size(132, 20);
+            this.label200.TabIndex = 58;
+            this.label200.Text = "ВТОРАЯ ЛИГА";
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 3;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 78.88889F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 21.11111F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 130F));
+            this.tableLayoutPanel3.Controls.Add(this.label202, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.label203, 2, 0);
+            this.tableLayoutPanel3.Controls.Add(this.textBox2, 1, 0);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(611, 61);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 3;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 48.10126F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 51.89874F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(311, 100);
+            this.tableLayoutPanel3.TabIndex = 0;
             // 
             // label202
             // 
             this.label202.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label202.AutoSize = true;
             this.label202.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label202.Location = new System.Drawing.Point(68, -1);
+            this.label202.Location = new System.Drawing.Point(40, 10);
             this.label202.Name = "label202";
             this.label202.Size = new System.Drawing.Size(62, 18);
-            this.label202.TabIndex = 0;
+            this.label202.TabIndex = 61;
             this.label202.Text = "label202";
-            // 
-            // label203
-            // 
-            this.label203.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label203.AutoSize = true;
-            this.label203.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label203.Location = new System.Drawing.Point(177, -1);
-            this.label203.Name = "label203";
-            this.label203.Size = new System.Drawing.Size(62, 18);
-            this.label203.TabIndex = 1;
-            this.label203.Text = "label203";
-            // 
-            // textBox2
-            // 
-            this.textBox2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox2.Location = new System.Drawing.Point(136, -4);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(35, 24);
-            this.textBox2.TabIndex = 3;
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.label203);
-            this.panel2.Controls.Add(this.textBox2);
-            this.panel2.Controls.Add(this.label202);
-            this.panel2.Location = new System.Drawing.Point(3, 4);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(305, 18);
-            this.panel2.TabIndex = 4;
             // 
             // Form1
             // 
@@ -2835,11 +2842,10 @@
             this.tableLayoutPanel1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            this.panel1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2952,10 +2958,8 @@
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.Label label201;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label203;
         private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Label label202;
         private System.Windows.Forms.Label label199;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Label label15;
@@ -3058,6 +3062,8 @@
         private System.Windows.Forms.Label label197;
         private System.Windows.Forms.Label label198;
         private System.Windows.Forms.Label label200;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.Label label202;
     }
 }
 

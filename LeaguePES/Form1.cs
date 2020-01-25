@@ -14,6 +14,10 @@ namespace LeaguePES
 {
     public partial class Form1 : Form
     {
+        public Form1()
+        {
+            InitializeComponent();
+        }
         private struct Team
         {
             public int c_number;
@@ -26,23 +30,65 @@ namespace LeaguePES
             public int c_goals_scored;
             public int c_goals_conceded;
             public int c_score;
+            public int c_id;
         }
 
-
-    private Team[] m_TeamsPremier= new Team[10];
-    private Team[] m_TeamsTwo= new Team[10];
-    public Form1()
+        private class Match
         {
-            InitializeComponent();
+            public Match()
+            {
+                team1 = 0;
+                team2 = 0;
+                score_team1 = 0;
+                score_team2 = 0;
+                result = 0;
+            }
+
+            public int team1;
+            public int team2;
+            public int score_team1;
+            public int score_team2;
+            public int result;
         }
+
+        private class Round
+        {
+            public Round()
+            {
+                end_round = false;
+                matches = new List<Match>();
+            }
+            public bool end_round;
+            public List< Match> matches; 
+        }
+
+
+        private Team[] m_TeamsPremier= new Team[10];
+        private Team[] m_TeamsTwo= new Team[10];
+
+        private List<Round> m_RoundsPremierLeague = new List<Round>();
+        private List<Round> m_RoundsTwoLeague = new List<Round>();
+
+        private int m_CountRounds=9;
+        private int m_SizeOneRound=5;
+
+        //private List<Match> m_TimeTable=new List<Match>();
 
         private void button1_Click(object sender, EventArgs e)
         {
-
         }
 
 
         private void Form1_Load(object sender, EventArgs e)
+        {
+
+            FileTeamsRead();
+            FillTable();
+            m_RoundsPremierLeague = CreateTimeTable(m_TeamsPremier, m_CountRounds, m_SizeOneRound);
+            m_RoundsTwoLeague = CreateTimeTable(m_TeamsTwo, m_CountRounds, m_SizeOneRound);
+        }
+
+        private void FileTeamsRead()
         {
             StreamReader sr = new StreamReader("first_table.txt");
             string[] table_line;
@@ -50,11 +96,10 @@ namespace LeaguePES
             while (!sr.EndOfStream)
             {
                 table_line = sr.ReadLine().Split(' ');
-                if(i<10) CreateOneTeam(m_TeamsPremier, table_line, i);
-                else CreateOneTeam(m_TeamsTwo, table_line, i-10);
+                if (i < 10) CreateOneTeam(m_TeamsPremier, table_line, i);
+                else CreateOneTeam(m_TeamsTwo, table_line, i - 10);
                 i++;
             }
-            FillTable();
         }
 
         private void CreateOneTeam(Team[] teams, string[] table_line, int i)
@@ -69,6 +114,7 @@ namespace LeaguePES
             teams[i].c_goals_scored = int.Parse(table_line[7]);
             teams[i].c_goals_conceded = int.Parse(table_line[8]);
             teams[i].c_score = int.Parse(table_line[9]);
+            teams[i].c_id = int.Parse(table_line[10]);
         }
 
         private void FillTable()
@@ -98,5 +144,82 @@ namespace LeaguePES
         }
 
 
+        private List<Round> CreateTimeTable(Team[] teams,int count_rounds,int size_one_round)
+        {
+            List<Round> rounds = new List<Round>();
+            List<Match> temp_matches = new List<Match>();
+
+            for (int i=0;i< teams.Length; i++)
+            {
+                for(int j = i; j < teams.Length; j++)
+                {
+                    if (i != j)
+                    {
+                        Match match=new Match();
+                        match.team1 = i;
+                        match.team2 = j;
+                        temp_matches.Add(match);
+                    }
+                }
+            }
+
+            for(int i = 0; i < count_rounds; i++)
+            {
+                rounds.Add(new Round());
+                for (int next_match = 0; next_match < size_one_round; next_match++)
+                {
+                    for(int m = 0; m < temp_matches.Count; m++)
+                    {
+                        if (IsTeamOfRound(temp_matches[m], rounds[i].matches))
+                        {
+                            rounds[i].matches.Add(temp_matches[m]);
+                            break;
+                        }
+                    }
+                }
+                if(rounds[i].matches.Count< size_one_round)
+                {
+                    rounds.RemoveAt(i);
+                    i--;
+                    temp_matches = MixList(temp_matches);
+                }
+                else if (rounds[i].matches.Count == size_one_round)
+                {
+                    for(int j=0;j<rounds[i].matches.Count;j++)
+                        temp_matches.Remove(rounds[i].matches[j]);
+                }
+            }
+
+            return rounds;
+        }
+
+
+        private bool IsTeamOfRound(Match match, List<Match> one_round)
+        {
+            for(int i = 0; i < one_round.Count; i++)
+            {
+                if (match.team1 == one_round[i].team1 || match.team1 == one_round[i].team2 || match.team2 == one_round[i].team1 || match.team2 == one_round[i].team2)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private List<Match> MixList(List<Match> list_matches)
+        {
+            Random rnd = new Random();
+            int rand_index;
+            Match m;
+            for(int i = 0; i < list_matches.Count - 1; i++)
+            {
+                rand_index = rnd.Next(0, list_matches.Count-1);
+                m = list_matches[i];
+                list_matches[i] = list_matches[rand_index];
+                list_matches[rand_index] = m;
+            }
+            //list_matches[0] = m;
+            return list_matches;
+        }
     }
 }
