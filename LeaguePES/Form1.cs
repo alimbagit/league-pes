@@ -41,14 +41,14 @@ namespace LeaguePES
                 team2 = 0;
                 score_team1 = 0;
                 score_team2 = 0;
-                result = 0;
+                is_played = 0;
             }
 
             public int team1;
             public int team2;
             public int score_team1;
             public int score_team2;
-            public int result;
+            public int is_played;
         }
 
         private class Round
@@ -62,6 +62,13 @@ namespace LeaguePES
             public List< Match> matches; 
         }
 
+        public struct Config
+        {
+            public int current_season;
+            public bool end_current_season;
+
+        }
+
 
         private Team[] m_TeamsPremier= new Team[10];
         private Team[] m_TeamsTwo= new Team[10];
@@ -71,26 +78,56 @@ namespace LeaguePES
 
         private int m_CountRounds=9;
         private int m_SizeOneRound=5;
-
-        //private List<Match> m_TimeTable=new List<Match>();
+        private Config m_Config;
 
         private void button1_Click(object sender, EventArgs e)
         {
+            CreateNewSeason();
         }
 
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            LoadConfig();
+            FileTeamsRead(); //Чтение команд из файла
 
-            FileTeamsRead();
-            FillTable();
-            m_RoundsPremierLeague = CreateTimeTable(m_TeamsPremier, m_CountRounds, m_SizeOneRound);
-            m_RoundsTwoLeague = CreateTimeTable(m_TeamsTwo, m_CountRounds, m_SizeOneRound);
+            m_RoundsPremierLeague= FileRoundsRead(m_Config.current_season,m_TeamsPremier,1); //Чтение раундов матчей из файла
+            m_RoundsTwoLeague = FileRoundsRead(m_Config.current_season, m_TeamsTwo, 2);
+            //m_RoundsTwoLeague = CreateTimeTable(m_TeamsTwo, m_CountRounds, m_SizeOneRound); 
+            m_TeamsPremier =MatchesCalculation(m_RoundsPremierLeague, m_TeamsPremier);
+            m_TeamsTwo = MatchesCalculation(m_RoundsTwoLeague, m_TeamsTwo);
+            
+            FillTable(tableLayoutPanel1,m_TeamsPremier);
+            FillTable(tableLayoutPanel2, m_TeamsTwo);
+            //FillCalendar(tableLayoutPanel3, m_RoundsPremierLeague,m_TeamsPremier);
+
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            SaveConfig();
+            //SaveCurrentSeasonToFile();
+        }
+
+        private void LoadConfig()
+        {
+            StreamReader sr = new StreamReader("config.txt");
+            m_Config.current_season = int.Parse(sr.ReadLine());
+            m_Config.end_current_season = int.Parse(sr.ReadLine())==1;
+            sr.Close();
+        }
+
+        private void SaveConfig()
+        {
+            StreamWriter sw = new StreamWriter("config.txt");
+            sw.WriteLine( m_Config.current_season.ToString());
+            sw.WriteLine(m_Config.end_current_season ? "1" :"0");
+            sw.Close();
         }
 
         private void FileTeamsRead()
         {
-            StreamReader sr = new StreamReader("first_table.txt");
+            StreamReader sr = new StreamReader("current_table.txt");
             string[] table_line;
             int i = 0;
             while (!sr.EndOfStream)
@@ -100,8 +137,10 @@ namespace LeaguePES
                 else CreateOneTeam(m_TeamsTwo, table_line, i - 10);
                 i++;
             }
+            sr.Close();
         }
 
+        
         private void CreateOneTeam(Team[] teams, string[] table_line, int i)
         {
             teams[i].c_number = int.Parse(table_line[0]);
@@ -117,32 +156,222 @@ namespace LeaguePES
             teams[i].c_id = int.Parse(table_line[10]);
         }
 
-        private void FillTable()
+        private List<Round> FileRoundsRead(int season_number,Team[] teams,int league_number)
         {
-            for (int row=0; row < 10; row++)
+            List<Round> result = new List<Round>();
+            StreamReader sr;
+            if (league_number == 1) sr = new StreamReader("season" + season_number + "premier.txt");
+            else sr= new StreamReader("season" + season_number + "two.txt");
+            string[] line;
+            Round one_round = new Round();
+            while (!sr.EndOfStream)
             {
-                tableLayoutPanel1.GetControlFromPosition(0, row+1).Text = m_TeamsPremier[row].c_number.ToString();
-                tableLayoutPanel1.GetControlFromPosition(1, row+1).Text = m_TeamsPremier[row].c_owner;
-                tableLayoutPanel1.GetControlFromPosition(2, row+1).Text = m_TeamsPremier[row].c_name;
-                tableLayoutPanel1.GetControlFromPosition(3, row+1).Text = m_TeamsPremier[row].c_games.ToString();
-                tableLayoutPanel1.GetControlFromPosition(4, row+1).Text = m_TeamsPremier[row].c_wins.ToString();
-                tableLayoutPanel1.GetControlFromPosition(5, row+1).Text = m_TeamsPremier[row].c_draws.ToString();
-                tableLayoutPanel1.GetControlFromPosition(6, row+1).Text = m_TeamsPremier[row].c_loses.ToString();
-                tableLayoutPanel1.GetControlFromPosition(7, row+1).Text = m_TeamsPremier[row].c_goals_scored.ToString() + "-" + m_TeamsPremier[row].c_goals_conceded.ToString();
-                tableLayoutPanel1.GetControlFromPosition(8, row+1).Text = m_TeamsPremier[row].c_score.ToString();
+                Match one_match = new Match();
+                if (one_round.matches.Count < m_SizeOneRound)
+                {
+                    line = sr.ReadLine().Split(' ');
+                    one_match.team1 = int.Parse(line[0]);
+                    one_match.score_team1= int.Parse(line[1]);
+                    one_match.score_team2 = int.Parse(line[2]);
+                    one_match.team2 = int.Parse(line[3]);
+                    one_match.is_played = int.Parse(line[4]);
+                    one_round.matches.Add(one_match);
+                }
+                else
+                {
+                    result.Add(one_round);
+                    one_round = new Round();
+                }
+            }
+            sr.Close();
+            result.Add(one_round);
+            return result;
+        }
 
-                tableLayoutPanel2.GetControlFromPosition(0, row+1).Text = m_TeamsTwo[row].c_number.ToString();
-                tableLayoutPanel2.GetControlFromPosition(1, row+1).Text = m_TeamsTwo[row].c_owner;
-                tableLayoutPanel2.GetControlFromPosition(2, row+1).Text = m_TeamsTwo[row ].c_name;
-                tableLayoutPanel2.GetControlFromPosition(3, row+1).Text = m_TeamsTwo[row ].c_games.ToString();
-                tableLayoutPanel2.GetControlFromPosition(4, row+1).Text = m_TeamsTwo[row ].c_wins.ToString();
-                tableLayoutPanel2.GetControlFromPosition(5, row+1).Text = m_TeamsTwo[row ].c_draws.ToString();
-                tableLayoutPanel2.GetControlFromPosition(6, row+1).Text = m_TeamsTwo[row ].c_loses.ToString();
-                tableLayoutPanel2.GetControlFromPosition(7, row+1).Text = m_TeamsTwo[row ].c_goals_scored.ToString() + "-" + m_TeamsTwo[row].c_goals_conceded.ToString();
-                tableLayoutPanel2.GetControlFromPosition(8, row+1).Text = m_TeamsTwo[row ].c_score.ToString();
+        private Team[] MatchesCalculation(List<Round> rounds,Team[] teams)
+        {
+            for(int i = 0; i < teams.Length; i++)
+            {
+                teams[i].c_games = 0;
+                teams[i].c_wins = 0;
+                teams[i].c_draws = 0;
+                teams[i].c_loses = 0;
+                teams[i].c_goals_scored = 0;
+                teams[i].c_goals_conceded = 0;
+                teams[i].c_score = 0;
+            }
+            Team[] result;
+            foreach(Round round in rounds)
+            {
+                foreach(Match match in round.matches)
+                {
+                    if (match.is_played == 1)
+                    {
+                        teams[TeamSearchById(teams, match.team2)].c_games += 1;
+                        teams[TeamSearchById(teams, match.team1)].c_games += 1;
+                        teams[TeamSearchById(teams, match.team2)].c_goals_scored += match.score_team2;
+                        teams[TeamSearchById(teams, match.team2)].c_goals_conceded += match.score_team1;
+                        teams[TeamSearchById(teams, match.team1)].c_goals_scored += match.score_team1;
+                        teams[TeamSearchById(teams, match.team1)].c_goals_conceded += match.score_team2;
+
+                        if (match.score_team1 < match.score_team2)
+                        {
+                            teams[TeamSearchById(teams, match.team2)].c_wins += 1;
+                            teams[TeamSearchById(teams, match.team2)].c_score += 3;
+                            teams[TeamSearchById(teams, match.team1)].c_loses += 1;
+                        }
+                        else if (match.score_team1 == match.score_team2)
+                        {
+                            teams[TeamSearchById(teams, match.team2)].c_draws += 1;
+                            teams[TeamSearchById(teams, match.team1)].c_draws += 1;
+                            teams[TeamSearchById(teams, match.team1)].c_score += 1;
+                            teams[TeamSearchById(teams, match.team2)].c_score += 1;
+                        }
+                        else if (match.score_team1 > match.score_team2)
+                        {
+                            teams[TeamSearchById(teams, match.team1)].c_wins += 1;
+                            teams[TeamSearchById(teams, match.team1)].c_score += 3;
+                            teams[TeamSearchById(teams, match.team2)].c_loses += 1;
+                        }
+                    }
+                }
+            }
+            result = TeamsSort(teams);
+            return result;
+        }
+
+        private int TeamSearchById(Team[] teams, int id)
+        {
+            for(int i = 0; i < teams.Length; i++)
+            {
+                if (teams[i].c_id == id) return i;
+            }
+            return -1;
+        }
+
+        private Team[] TeamsSort(Team[] teams)
+        {
+            Team t;
+            for (int r = 0; r < m_CountRounds; r++) {
+                for (int i = 0; i < teams.Length - 1; i++)
+                {
+                    if (teams[i].c_score == teams[i + 1].c_score)
+                    {
+                        if (teams[i].c_goals_scored - teams[i].c_goals_conceded == teams[i + 1].c_goals_scored - teams[i + 1].c_goals_conceded)
+                        {
+                            if (teams[i].c_wins == teams[i + 1].c_wins)
+                            {
+                                if (teams[i].c_goals_scored < teams[i + 1].c_goals_scored)
+                                {
+                                    t = teams[i];
+                                    teams[i] = teams[i + 1];
+                                    teams[i + 1] = t;
+                                    continue;
+                                }
+                            }
+                            else if (teams[i].c_wins < teams[i + 1].c_wins)
+                            {
+                                t = teams[i];
+                                teams[i] = teams[i + 1];
+                                teams[i + 1] = t;
+                                continue;
+                            }
+                        }
+                        else if (teams[i].c_goals_scored - teams[i].c_goals_conceded < teams[i + 1].c_goals_scored - teams[i + 1].c_goals_conceded)
+                        {
+                            t = teams[i];
+                            teams[i] = teams[i + 1];
+                            teams[i + 1] = t;
+                            continue;
+                        }
+                    }
+                    else if (teams[i].c_score < teams[i + 1].c_score)
+                    {
+                        t = teams[i];
+                        teams[i] = teams[i + 1];
+                        teams[i + 1] = t;
+                        continue;
+                    }
+                }
+            }
+            return teams;
+        }
+
+        private void FillTable(TableLayoutPanel tableLayout, Team[] teams)
+        {
+            for (int row=0; row < teams.Length; row++)
+            {
+                tableLayout.GetControlFromPosition(0, row+1).Text = teams[row].c_number.ToString();
+                tableLayout.GetControlFromPosition(1, row+1).Text = teams[row].c_owner;
+                tableLayout.GetControlFromPosition(2, row+1).Text = teams[row].c_name;
+                tableLayout.GetControlFromPosition(3, row+1).Text = teams[row].c_games.ToString();
+                tableLayout.GetControlFromPosition(4, row+1).Text = teams[row].c_wins.ToString();
+                tableLayout.GetControlFromPosition(5, row+1).Text = teams[row].c_draws.ToString();
+                tableLayout.GetControlFromPosition(6, row+1).Text = teams[row].c_loses.ToString();
+                tableLayout.GetControlFromPosition(7, row+1).Text = teams[row].c_goals_scored.ToString() + "-" + m_TeamsPremier[row].c_goals_conceded.ToString();
+                tableLayout.GetControlFromPosition(8, row+1).Text = teams[row].c_score.ToString();
             }
         }
 
+        private void FillCalendar(TableLayoutPanel tableLayout, List<Round> rounds, Team[] teams)
+        {
+            int row = 0;
+            for(int round=0;round<rounds.Count;round++)
+            {
+                tableLayout.GetControlFromPosition(0, row).Text = "Тур " + round;
+                row++;
+                foreach(Match match in rounds[round].matches)
+                {
+                    tableLayout.GetControlFromPosition(0, row).Text = teams[TeamSearchById(teams, match.team1)].c_name;
+                    tableLayout.GetControlFromPosition(2, row).Text = teams[TeamSearchById(teams, match.team2)].c_name;
+                    if(match.is_played==1)
+                        tableLayout.GetControlFromPosition(1, row).Text = match.score_team1 + ":" + match.score_team2;
+                }
+            }
+        }
+
+        private void CreateNewSeason()
+        {
+            if (EndSeasonCheck())
+            {
+                SaveCurrentSeasonToFile();
+                m_RoundsPremierLeague = CreateTimeTable(m_TeamsPremier, m_CountRounds, m_SizeOneRound);
+                m_RoundsTwoLeague = CreateTimeTable(m_TeamsTwo, m_CountRounds, m_SizeOneRound);
+                m_Config.current_season++;
+                SaveCurrentSeasonToFile();
+            }
+            else
+            {
+                MessageBox.Show("Заврешите текущий сезон!");
+            }
+        }
+
+        private void SaveCurrentSeasonToFile()
+        {
+            StreamWriter sw1 = new StreamWriter("season" + m_Config.current_season.ToString()+"premier.txt");
+            foreach (Round one_round in m_RoundsPremierLeague)
+            {
+                foreach (Match one_match in one_round.matches)
+                {
+                    string line = "";
+                    line = one_match.team1 + " " + one_match.score_team1 + " " + one_match.score_team2 + " " + one_match.team2 + " " + one_match.is_played;
+                    sw1.WriteLine(line);
+                }
+            }
+            sw1.Close();
+
+            StreamWriter sw2 = new StreamWriter("season" + m_Config.current_season + "two.txt");
+            foreach (Round one_round in m_RoundsTwoLeague)
+            {
+                foreach (Match one_match in one_round.matches)
+                {
+                    string line = "";
+                    line = one_match.team1 + " " + one_match.score_team1 + " " + one_match.score_team2 + " " + one_match.team2 + " " + one_match.is_played;
+                    sw2.WriteLine(line);
+                }
+            }
+            sw2.Close();
+        }
 
         private List<Round> CreateTimeTable(Team[] teams,int count_rounds,int size_one_round)
         {
@@ -156,8 +385,8 @@ namespace LeaguePES
                     if (i != j)
                     {
                         Match match=new Match();
-                        match.team1 = i;
-                        match.team2 = j;
+                        match.team1 = teams[i].c_id;
+                        match.team2 = teams[j].c_id;
                         temp_matches.Add(match);
                     }
                 }
@@ -218,8 +447,18 @@ namespace LeaguePES
                 list_matches[i] = list_matches[rand_index];
                 list_matches[rand_index] = m;
             }
-            //list_matches[0] = m;
             return list_matches;
+        }
+
+        private bool EndSeasonCheck()
+        {
+            bool is_end = true;
+            for (int i = 0; i < m_TeamsPremier.Length; i++)
+            {
+                if (m_TeamsPremier[i].c_games < 9 || m_TeamsTwo[i].c_games < 9) is_end = false;
+            }
+            m_Config.end_current_season = is_end;
+            return is_end;
         }
     }
 }
