@@ -42,6 +42,7 @@ namespace LeaguePES
                 score_team1 = 0;
                 score_team2 = 0;
                 is_played = 0;
+                textbox = "";
             }
 
             public int team1;
@@ -49,6 +50,7 @@ namespace LeaguePES
             public int score_team1;
             public int score_team2;
             public int is_played;
+            public string textbox;
         }
 
         private class Round
@@ -85,7 +87,6 @@ namespace LeaguePES
             CreateNewSeason();
         }
 
-
         private void Form1_Load(object sender, EventArgs e)
         {
             LoadConfig();
@@ -99,7 +100,8 @@ namespace LeaguePES
             
             FillTable(tableLayoutPanel1,m_TeamsPremier);
             FillTable(tableLayoutPanel2, m_TeamsTwo);
-            //FillCalendar(tableLayoutPanel3, m_RoundsPremierLeague,m_TeamsPremier);
+            FillCalendar(tableLayoutPanel3, m_RoundsPremierLeague,m_TeamsPremier);
+            FillCalendar(tableLayoutPanel4, m_RoundsTwoLeague, m_TeamsTwo);
 
         }
 
@@ -318,14 +320,26 @@ namespace LeaguePES
             int row = 0;
             for(int round=0;round<rounds.Count;round++)
             {
-                tableLayout.GetControlFromPosition(0, row).Text = "Тур " + round;
+                // tableLayout.GetControlFromPosition(0, row).Text = "Тур " + round;
+
+                Control lab = tableLayout.GetControlFromPosition(0, row);
+                tableLayout.GetControlFromPosition(0, row).Font= new Font(lab.Font, lab.Font.Style ^ FontStyle.Bold);
+                tableLayout.GetControlFromPosition(0, row).Text= "Тур " + (round+1).ToString();
+                tableLayout.GetControlFromPosition(1, row).Visible = false;
+                tableLayout.GetControlFromPosition(2, row).Visible = false;
                 row++;
                 foreach(Match match in rounds[round].matches)
                 {
-                    tableLayout.GetControlFromPosition(0, row).Text = teams[TeamSearchById(teams, match.team1)].c_name;
-                    tableLayout.GetControlFromPosition(2, row).Text = teams[TeamSearchById(teams, match.team2)].c_name;
-                    if(match.is_played==1)
+                    int m = TeamSearchById(teams, match.team1);
+                    tableLayout.GetControlFromPosition(0, row).Text = "("+teams[m].c_owner+") "+ teams[m].c_name;
+                    m = TeamSearchById(teams, match.team2);
+                    tableLayout.GetControlFromPosition(2, row).Text = "(" + teams[m].c_owner + ") " + teams[m].c_name;
+                    if (match.is_played == 1)
+                    {
                         tableLayout.GetControlFromPosition(1, row).Text = match.score_team1 + ":" + match.score_team2;
+                    }
+                    match.textbox = tableLayout.GetControlFromPosition(1, row).Name;
+                    row++;
                 }
             }
         }
@@ -342,7 +356,7 @@ namespace LeaguePES
             }
             else
             {
-                MessageBox.Show("Заврешите текущий сезон!");
+                MessageBox.Show("Завершите текущий сезон!");
             }
         }
 
@@ -459,6 +473,76 @@ namespace LeaguePES
             }
             m_Config.end_current_season = is_end;
             return is_end;
+        }
+
+        private void Text_Score_Leave(object sender, EventArgs e)
+        {
+            TextBox txtBx=(TextBox)sender;
+            string[] text = txtBx.Text.Split(':');
+            if (txtBx.Text.Length == 3 && text.Length == 2)
+            {
+                    SetScoreMatch(txtBx, txtBx.Parent.Name);
+            }
+            else
+            {
+                txtBx.Text = "";
+            }
+        }
+
+        private void SetScoreMatch(TextBox txtbx, string table_layout)
+        {
+            string[] text = txtbx.Text.Split(':');
+            if (table_layout == tableLayoutPanel3.Name)
+            {
+                foreach(Round round in m_RoundsPremierLeague)
+                {
+                    int match_index=MatchSearchByTxtBx(round, txtbx.Name);
+                    if (match_index != -1)
+                    {
+                        round.matches[match_index].score_team1 = int.Parse( text[0]);
+                        round.matches[match_index].score_team2 = int.Parse(text[1]);
+                        round.matches[match_index].is_played = 1;
+                        break;
+                    }
+                }
+                MatchesCalculation(m_RoundsPremierLeague, m_TeamsPremier);
+                FillTable(tableLayoutPanel1, m_TeamsPremier);
+            }
+            else if (table_layout == tableLayoutPanel4.Name)
+            {
+                foreach (Round round in m_RoundsTwoLeague)
+                {
+                    int match_index = MatchSearchByTxtBx(round, txtbx.Name);
+                    if (match_index != -1)
+                    {
+                        round.matches[match_index].score_team1 = int.Parse(text[0]);
+                        round.matches[match_index].score_team2 = int.Parse(text[1]);
+                        round.matches[match_index].is_played = 1;
+                        break;
+                    }
+                }
+                MatchesCalculation(m_RoundsTwoLeague, m_TeamsTwo);
+                FillTable(tableLayoutPanel2, m_TeamsTwo);
+            }
+        }
+
+        private int MatchSearchByTxtBx(Round round,string name_txtbx)
+        {
+            for(int i=0; i < round.matches.Count; i++)
+            {
+                if (round.matches[i].textbox == name_txtbx) return i;
+            }
+            return -1;
+        }
+
+        private void TextBoxFilter(object sender, KeyPressEventArgs e)
+        {
+            char number = e.KeyChar;
+
+            if ((e.KeyChar <= 47 || e.KeyChar >= 58) && number != 8 && number != 58) //цифры, клавиша BackSpace и запятая а ASCII
+            {
+                e.Handled = true;
+            }
         }
     }
 }
