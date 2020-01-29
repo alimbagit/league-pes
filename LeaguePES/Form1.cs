@@ -18,7 +18,7 @@ namespace LeaguePES
         {
             InitializeComponent();
         }
-        private struct Team
+        public struct Team
         {
             public int c_number;
             public string c_owner;
@@ -31,6 +31,12 @@ namespace LeaguePES
             public int c_goals_conceded;
             public int c_score;
             public int c_id;
+            public int c_bonus_score;
+
+            public int c_1st_place;
+            public int c_2nd_place;
+            public int c_3rd_place;
+            public int c_champion_score;
         }
 
         private class Match
@@ -53,6 +59,10 @@ namespace LeaguePES
             public string textbox;
         }
 
+        private int[,] m_TemplateCalendar = {{4, 6},{8,9 },{7,3 },{5,0 },{2,1 },{6,8 },{3,0 }, {9,1 }, {7,5 }, {4,2 }, {9,0 } ,
+            {8,3 }, {6,1 }, {4,5 }, { 7,2}, {8,0 } , {9,5 }, {4,1 }, {3,2 }, {6,7 }, {8,5 } , {6,2 }, {7,0 }, {4,9 }, {3,1 }, {9,7 } , {5,2 }, {8,1 },
+            {4,3 }, {6,0 }, {4,8 },{3,5},{0,2},{6,9},{7,1},{6,3},{4,0},{9,2},{5,1},{8,7},{6,5},{9,3},{4,7},{8,2},{0,1}};
+
         private class Round
         {
             public Round()
@@ -70,37 +80,33 @@ namespace LeaguePES
             public bool end_current_season;
 
         }
+        private static int m_CountRounds = 9;
+        private static int m_SizeOneRound = 5;
 
-
-        private Team[] m_TeamsPremier= new Team[10];
-        private Team[] m_TeamsTwo= new Team[10];
+        public List<Team> m_TeamsAll = new List<Team>();
+        public Team[] m_TeamsPremier= new Team[10];
+        public Team[] m_TeamsTwo= new Team[10];
 
         private List<Round> m_RoundsPremierLeague = new List<Round>();
         private List<Round> m_RoundsTwoLeague = new List<Round>();
 
-        private int m_CountRounds=9;
-        private int m_SizeOneRound=5;
         private Config m_Config;
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            CreateNewSeason();
-        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             LoadConfig();
-            FileTeamsRead(); //Чтение команд из файла
+            FileTeamsLoad(); //Чтение текущих команд из файла
+            m_TeamsAll= FileAllTeamsLoad(); //Чтение всех команд из файла
 
-            m_RoundsPremierLeague= FileRoundsRead(m_Config.current_season,m_TeamsPremier,1); //Чтение раундов матчей из файла
-            m_RoundsTwoLeague = FileRoundsRead(m_Config.current_season, m_TeamsTwo, 2);
+            m_RoundsPremierLeague = FileRoundsRead(m_Config.current_season,1); //Чтение раундов матчей из файла
+            m_RoundsTwoLeague = FileRoundsRead(m_Config.current_season, 2);
             //m_RoundsTwoLeague = CreateTimeTable(m_TeamsTwo, m_CountRounds, m_SizeOneRound); 
             m_TeamsPremier =MatchesCalculation(m_RoundsPremierLeague, m_TeamsPremier);
             m_TeamsTwo = MatchesCalculation(m_RoundsTwoLeague, m_TeamsTwo);
-            
             FillTable(tableLayoutPanel1,m_TeamsPremier);
             FillTable(tableLayoutPanel2, m_TeamsTwo);
-            FillCalendar(tableLayoutPanel3, m_RoundsPremierLeague,m_TeamsPremier);
+            FillCalendar(tableLayoutPanel3, m_RoundsPremierLeague, m_TeamsPremier);
             FillCalendar(tableLayoutPanel4, m_RoundsTwoLeague, m_TeamsTwo);
 
         }
@@ -108,7 +114,43 @@ namespace LeaguePES
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             SaveConfig();
-            //SaveCurrentSeasonToFile();
+            FileCurrentTeamsSave();
+            SaveCurrentSeasonToFile();
+
+        }
+
+
+
+        private void buttonNewSeason_Click(object sender, EventArgs e)
+        {
+            //if (EndSeasonCheck())
+            //{
+                Form2 newForm = new Form2(this);
+                newForm.Show();
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Завершите текущий сезон!");
+            //}
+        }
+
+        public void CreateNewSeason(Form2 f)
+        {
+            SaveCurrentSeasonToFile();
+            m_Config.current_season++;
+            m_TeamsPremier = f.m_TeamsPremier;
+            m_TeamsTwo = f.m_TeamsTwo;
+            m_RoundsPremierLeague = CreateTimeTable(m_TeamsPremier, m_CountRounds, m_SizeOneRound);
+            m_RoundsTwoLeague = CreateTimeTable(m_TeamsTwo, m_CountRounds, m_SizeOneRound);
+            m_TeamsPremier = MatchesCalculation(m_RoundsPremierLeague, m_TeamsPremier);
+            m_TeamsTwo = MatchesCalculation(m_RoundsTwoLeague, m_TeamsTwo);
+
+            FileCurrentTeamsSave();
+            FillTable(tableLayoutPanel1, m_TeamsPremier);
+            FillTable(tableLayoutPanel2, m_TeamsTwo);
+            FillCalendar(tableLayoutPanel3, m_RoundsPremierLeague, m_TeamsPremier);
+            FillCalendar(tableLayoutPanel4, m_RoundsTwoLeague, m_TeamsTwo);
+            UpdateSeasonLables();
         }
 
         private void LoadConfig()
@@ -117,6 +159,7 @@ namespace LeaguePES
             m_Config.current_season = int.Parse(sr.ReadLine());
             m_Config.end_current_season = int.Parse(sr.ReadLine())==1;
             sr.Close();
+            UpdateSeasonLables();
         }
 
         private void SaveConfig()
@@ -127,7 +170,13 @@ namespace LeaguePES
             sw.Close();
         }
 
-        private void FileTeamsRead()
+        private void UpdateSeasonLables()
+        {
+            labelSeasonNumber1.Text = "Сезон " + m_Config.current_season.ToString();
+            labelSeasonNumber2.Text = "Сезон " + m_Config.current_season.ToString();
+        }
+
+        private void FileTeamsLoad()
         {
             StreamReader sr = new StreamReader("current_table.txt");
             string[] table_line;
@@ -135,30 +184,79 @@ namespace LeaguePES
             while (!sr.EndOfStream)
             {
                 table_line = sr.ReadLine().Split(' ');
-                if (i < 10) CreateOneTeam(m_TeamsPremier, table_line, i);
-                else CreateOneTeam(m_TeamsTwo, table_line, i - 10);
+                if (i < 10) m_TeamsPremier[i]= CreateOneTeam( table_line);
+                else m_TeamsTwo[i-10]=CreateOneTeam(table_line);
                 i++;
             }
             sr.Close();
         }
 
-        
-        private void CreateOneTeam(Team[] teams, string[] table_line, int i)
+        private List<Team> FileAllTeamsLoad()
         {
-            teams[i].c_number = int.Parse(table_line[0]);
-            teams[i].c_owner = table_line[1];
-            teams[i].c_name = table_line[2];
-            teams[i].c_games = int.Parse(table_line[3]);
-            teams[i].c_wins = int.Parse(table_line[4]);
-            teams[i].c_draws = int.Parse(table_line[5]);
-            teams[i].c_loses = int.Parse(table_line[6]);
-            teams[i].c_goals_scored = int.Parse(table_line[7]);
-            teams[i].c_goals_conceded = int.Parse(table_line[8]);
-            teams[i].c_score = int.Parse(table_line[9]);
-            teams[i].c_id = int.Parse(table_line[10]);
+            List<Team> teams = new List<Team>();
+            StreamReader sr = new StreamReader("teams_all.txt");
+            string[] line;
+            while (!sr.EndOfStream)
+            {
+                line = sr.ReadLine().Split(' ');
+                teams.Add(CreateOneTeam(line));
+
+            }
+            sr.Close();
+            return teams;
         }
 
-        private List<Round> FileRoundsRead(int season_number,Team[] teams,int league_number)
+        
+        private Team CreateOneTeam(string[] table_line)
+        {
+            Team team = new Team();
+            team.c_id = int.Parse(table_line[0]);
+            team.c_owner = table_line[1];
+            team.c_name = table_line[2];
+            team.c_bonus_score = int.Parse(table_line[3]);
+            team.c_1st_place = int.Parse(table_line[4]);
+            team.c_2nd_place = int.Parse(table_line[5]);
+            team.c_3rd_place = int.Parse(table_line[6]);
+            team.c_champion_score = int.Parse(table_line[7]);
+            return team;
+        }
+
+        private void FileCurrentTeamsSave()
+        {
+            StreamWriter swall = new StreamWriter("teams_all.txt");
+            string line;
+            foreach (Team team in m_TeamsAll)
+            {
+                line = team.c_id.ToString() + " " + team.c_owner + " ";
+                line += team.c_name + " "+team.c_bonus_score.ToString()+" "+team.c_1st_place.ToString()+ " ";
+                line += team.c_2nd_place.ToString() + " " + team.c_3rd_place.ToString() + " " + team.c_champion_score.ToString();
+                swall.WriteLine(line);
+            }
+            swall.Close();
+
+            StreamWriter sw = new StreamWriter("current_table.txt");
+            for (int i = 0; i < m_TeamsPremier.Length+m_TeamsTwo.Length; i++)
+            {
+                if (i < m_TeamsPremier.Length)
+                {
+                    line = m_TeamsPremier[i].c_id.ToString() + " " + m_TeamsPremier[i].c_owner + " ";
+                    line += m_TeamsPremier[i].c_name + " " + m_TeamsPremier[i].c_bonus_score.ToString() + " "+ m_TeamsPremier[i].c_1st_place.ToString() + " ";
+                    line += m_TeamsPremier[i].c_2nd_place.ToString() + " " + m_TeamsPremier[i].c_3rd_place.ToString() + " " + m_TeamsPremier[i].c_champion_score.ToString();
+                    sw.WriteLine(line);
+                }
+                else
+                {
+                    line = m_TeamsTwo[i- m_TeamsPremier.Length].c_id.ToString() + " " + m_TeamsTwo[i - m_TeamsPremier.Length].c_owner + " ";
+                    line += m_TeamsTwo[i - m_TeamsPremier.Length].c_name + " "+m_TeamsTwo[i- m_TeamsPremier.Length].c_bonus_score.ToString()+" " + m_TeamsTwo[i - m_TeamsPremier.Length].c_1st_place.ToString() + " ";
+                    line += m_TeamsTwo[i - m_TeamsPremier.Length].c_2nd_place.ToString() + " " + m_TeamsTwo[i-m_TeamsPremier.Length].c_3rd_place.ToString() + " ";
+                    line += m_TeamsTwo[i - m_TeamsPremier.Length].c_champion_score.ToString();
+                    sw.WriteLine(line);
+                }
+            }
+            sw.Close();
+        }
+
+        private List<Round> FileRoundsRead(int season_number, int league_number)
         {
             List<Round> result = new List<Round>();
             StreamReader sr;
@@ -201,6 +299,7 @@ namespace LeaguePES
                 teams[i].c_goals_scored = 0;
                 teams[i].c_goals_conceded = 0;
                 teams[i].c_score = 0;
+                teams[i].c_score += teams[i].c_bonus_score;
             }
             Team[] result;
             foreach(Round round in rounds)
@@ -254,7 +353,8 @@ namespace LeaguePES
         private Team[] TeamsSort(Team[] teams)
         {
             Team t;
-            for (int r = 0; r < m_CountRounds; r++) {
+            for (int r = 0; r < m_CountRounds; r++) 
+            {
                 for (int i = 0; i < teams.Length - 1; i++)
                 {
                     if (teams[i].c_score == teams[i + 1].c_score)
@@ -296,6 +396,11 @@ namespace LeaguePES
                     }
                 }
             }
+
+            for (int i = 0; i < teams.Length; i++)
+            {
+                teams[i].c_number = i +1;
+            }
             return teams;
         }
 
@@ -303,14 +408,13 @@ namespace LeaguePES
         {
             for (int row=0; row < teams.Length; row++)
             {
-                tableLayout.GetControlFromPosition(0, row+1).Text = teams[row].c_number.ToString();
                 tableLayout.GetControlFromPosition(1, row+1).Text = teams[row].c_owner;
                 tableLayout.GetControlFromPosition(2, row+1).Text = teams[row].c_name;
                 tableLayout.GetControlFromPosition(3, row+1).Text = teams[row].c_games.ToString();
                 tableLayout.GetControlFromPosition(4, row+1).Text = teams[row].c_wins.ToString();
                 tableLayout.GetControlFromPosition(5, row+1).Text = teams[row].c_draws.ToString();
                 tableLayout.GetControlFromPosition(6, row+1).Text = teams[row].c_loses.ToString();
-                tableLayout.GetControlFromPosition(7, row+1).Text = teams[row].c_goals_scored.ToString() + "-" + m_TeamsPremier[row].c_goals_conceded.ToString();
+                tableLayout.GetControlFromPosition(7, row+1).Text = teams[row].c_goals_scored.ToString() + "-" + teams[row].c_goals_conceded.ToString();
                 tableLayout.GetControlFromPosition(8, row+1).Text = teams[row].c_score.ToString();
             }
         }
@@ -320,8 +424,6 @@ namespace LeaguePES
             int row = 0;
             for(int round=0;round<rounds.Count;round++)
             {
-                // tableLayout.GetControlFromPosition(0, row).Text = "Тур " + round;
-
                 Control lab = tableLayout.GetControlFromPosition(0, row);
                 tableLayout.GetControlFromPosition(0, row).Font= new Font(lab.Font, lab.Font.Style ^ FontStyle.Bold);
                 tableLayout.GetControlFromPosition(0, row).Text= "Тур " + (round+1).ToString();
@@ -338,25 +440,13 @@ namespace LeaguePES
                     {
                         tableLayout.GetControlFromPosition(1, row).Text = match.score_team1 + ":" + match.score_team2;
                     }
+                    else if (match.is_played == 0)
+                    {
+                        tableLayout.GetControlFromPosition(1, row).Text = "";
+                    }
                     match.textbox = tableLayout.GetControlFromPosition(1, row).Name;
                     row++;
                 }
-            }
-        }
-
-        private void CreateNewSeason()
-        {
-            if (EndSeasonCheck())
-            {
-                SaveCurrentSeasonToFile();
-                m_RoundsPremierLeague = CreateTimeTable(m_TeamsPremier, m_CountRounds, m_SizeOneRound);
-                m_RoundsTwoLeague = CreateTimeTable(m_TeamsTwo, m_CountRounds, m_SizeOneRound);
-                m_Config.current_season++;
-                SaveCurrentSeasonToFile();
-            }
-            else
-            {
-                MessageBox.Show("Завершите текущий сезон!");
             }
         }
 
@@ -392,44 +482,20 @@ namespace LeaguePES
             List<Round> rounds = new List<Round>();
             List<Match> temp_matches = new List<Match>();
 
-            for (int i=0;i< teams.Length; i++)
+            for(int i = 0; i < m_SizeOneRound*m_CountRounds; i++)
             {
-                for(int j = i; j < teams.Length; j++)
-                {
-                    if (i != j)
-                    {
-                        Match match=new Match();
-                        match.team1 = teams[i].c_id;
-                        match.team2 = teams[j].c_id;
-                        temp_matches.Add(match);
-                    }
-                }
+                Match match = new Match();
+                match.team1 = teams[m_TemplateCalendar[i,0]].c_id;
+                match.team2 = teams[m_TemplateCalendar[i,1]].c_id;
+                temp_matches.Add(match);
             }
 
-            for(int i = 0; i < count_rounds; i++)
+            for (int i = 0; i < count_rounds; i++)
             {
                 rounds.Add(new Round());
                 for (int next_match = 0; next_match < size_one_round; next_match++)
                 {
-                    for(int m = 0; m < temp_matches.Count; m++)
-                    {
-                        if (IsTeamOfRound(temp_matches[m], rounds[i].matches))
-                        {
-                            rounds[i].matches.Add(temp_matches[m]);
-                            break;
-                        }
-                    }
-                }
-                if(rounds[i].matches.Count< size_one_round)
-                {
-                    rounds.RemoveAt(i);
-                    i--;
-                    temp_matches = MixList(temp_matches);
-                }
-                else if (rounds[i].matches.Count == size_one_round)
-                {
-                    for(int j=0;j<rounds[i].matches.Count;j++)
-                        temp_matches.Remove(rounds[i].matches[j]);
+                    rounds[i].matches.Add(temp_matches[next_match]);
                 }
             }
 
@@ -469,7 +535,7 @@ namespace LeaguePES
             bool is_end = true;
             for (int i = 0; i < m_TeamsPremier.Length; i++)
             {
-                if (m_TeamsPremier[i].c_games < 9 || m_TeamsTwo[i].c_games < 9) is_end = false;
+                if (m_TeamsPremier[i].c_games < m_CountRounds || m_TeamsTwo[i].c_games < m_CountRounds) is_end = false;
             }
             m_Config.end_current_season = is_end;
             return is_end;
@@ -543,6 +609,31 @@ namespace LeaguePES
             {
                 e.Handled = true;
             }
+        }
+        private void buttonRandomScore1_Click(object sender, EventArgs e)
+        {
+            Random rnd = new Random();
+            string score1= rnd.Next(0, 4).ToString();
+            string score2 = rnd.Next(0, 4).ToString();
+            labelRandomScore1.Text = score1 + ":" + score2;
+        }
+
+        private void buttonRandomScore2_Click(object sender, EventArgs e)
+        {
+            Random rnd = new Random();
+            string score1 = rnd.Next(0, 4).ToString();
+            string score2 = rnd.Next(0, 4).ToString();
+            labelRandomScore2.Text = score1 + ":" + score2;
+        }
+
+        public void SetTeamTwo(Team[] teams)
+        {
+            m_TeamsTwo = teams;
+        }
+
+        public void SetTeamPremier(Team[] teams)
+        {
+            m_TeamsPremier = teams;
         }
     }
 }

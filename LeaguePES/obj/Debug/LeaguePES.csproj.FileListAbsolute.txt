@@ -16,3 +16,4 @@ C:\Users\us\Desktop\league-pes\LeaguePES\obj\Debug\LeaguePES.Properties.Resource
 C:\Users\us\Desktop\league-pes\LeaguePES\obj\Debug\LeaguePES.csproj.GenerateResource.cache
 C:\Users\us\Desktop\league-pes\LeaguePES\obj\Debug\LeaguePES.exe
 C:\Users\us\Desktop\league-pes\LeaguePES\obj\Debug\LeaguePES.pdb
+C:\Users\us\Desktop\league-pes\LeaguePES\obj\Debug\LeaguePES.Form2.resources
