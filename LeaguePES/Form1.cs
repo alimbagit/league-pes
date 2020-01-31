@@ -108,7 +108,7 @@ namespace LeaguePES
             FillTable(tableLayoutPanel2, m_TeamsTwo);
             FillCalendar(tableLayoutPanel3, m_RoundsPremierLeague, m_TeamsPremier);
             FillCalendar(tableLayoutPanel4, m_RoundsTwoLeague, m_TeamsTwo);
-
+            FillChampionTeams();
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -123,16 +123,16 @@ namespace LeaguePES
 
         private void buttonNewSeason_Click(object sender, EventArgs e)
         {
-            //if (EndSeasonCheck())
-            //{
+            if (EndSeasonCheck())
+            {
                 Form2 newForm = new Form2(this);
                 newForm.Show();
-            //}
-            //else
-            //{
-            //    MessageBox.Show("Завершите текущий сезон!");
-            //}
-        }
+            }
+            else
+            {
+                MessageBox.Show("Завершите текущий сезон!");
+            }
+}
 
         public void CreateNewSeason(Form2 f)
         {
@@ -150,6 +150,7 @@ namespace LeaguePES
             FillTable(tableLayoutPanel2, m_TeamsTwo);
             FillCalendar(tableLayoutPanel3, m_RoundsPremierLeague, m_TeamsPremier);
             FillCalendar(tableLayoutPanel4, m_RoundsTwoLeague, m_TeamsTwo);
+            FillChampionTeams();
             UpdateSeasonLables();
         }
 
@@ -490,44 +491,18 @@ namespace LeaguePES
                 temp_matches.Add(match);
             }
 
+            int next_match=0;
             for (int i = 0; i < count_rounds; i++)
             {
                 rounds.Add(new Round());
-                for (int next_match = 0; next_match < size_one_round; next_match++)
+                for (int j = 0; j < size_one_round; j++)
                 {
                     rounds[i].matches.Add(temp_matches[next_match]);
+                    next_match++;
                 }
             }
 
             return rounds;
-        }
-
-
-        private bool IsTeamOfRound(Match match, List<Match> one_round)
-        {
-            for(int i = 0; i < one_round.Count; i++)
-            {
-                if (match.team1 == one_round[i].team1 || match.team1 == one_round[i].team2 || match.team2 == one_round[i].team1 || match.team2 == one_round[i].team2)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        private List<Match> MixList(List<Match> list_matches)
-        {
-            Random rnd = new Random();
-            int rand_index;
-            Match m;
-            for(int i = 0; i < list_matches.Count - 1; i++)
-            {
-                rand_index = rnd.Next(0, list_matches.Count-1);
-                m = list_matches[i];
-                list_matches[i] = list_matches[rand_index];
-                list_matches[rand_index] = m;
-            }
-            return list_matches;
         }
 
         private bool EndSeasonCheck()
@@ -634,6 +609,64 @@ namespace LeaguePES
         public void SetTeamPremier(Team[] teams)
         {
             m_TeamsPremier = teams;
+        }
+
+        private void FillChampionTeams()
+        {
+            for(int i = 1; i < tableLayoutPanel5.RowCount; i++)
+            {
+                for(int j = 0; j < tableLayoutPanel5.ColumnCount; j++)
+                {
+                    tableLayoutPanel5.Controls.Remove(tableLayoutPanel5.GetControlFromPosition(j, i));
+                }
+                //tableLayoutPanel5.Size = new Size(tableLayoutPanel5.Size.Width, tableLayoutPanel5.Size.Height);
+            }
+
+
+            List<Team> teams_temp = m_TeamsAll;
+
+            Team t;
+            for(int i = 1; i < teams_temp.Count; i++)
+            {
+                if (teams_temp[i-1].c_champion_score < teams_temp[i].c_champion_score)
+                {
+                    t = teams_temp[i - 1];
+                    teams_temp[i - 1] = teams_temp[i];
+                    teams_temp[i] = t;
+                }
+            }
+            int champions_count = 0;
+            for (int i=0; i < teams_temp.Count; i++)
+            {
+                if (teams_temp[i].c_champion_score > 0)
+                {
+                    champions_count++;
+                    tableLayoutPanel5.Size = new Size(tableLayoutPanel5.Size.Width, tableLayoutPanel5.Size.Height + 30);
+                    tableLayoutPanel5.RowCount++;
+                    tableLayoutPanel5.RowStyles[0].SizeType = SizeType.Absolute;
+                    tableLayoutPanel5.RowStyles[0].Height=30;
+
+                    Label label = new Label();
+                    label.AutoSize = true;
+                    label.Text = (champions_count).ToString();
+                    tableLayoutPanel5.Controls.Add(label, 0, tableLayoutPanel5.RowCount - 1);
+                    label = new Label();
+                    label.Text = teams_temp[i].c_owner;
+                    tableLayoutPanel5.Controls.Add(label, 1, tableLayoutPanel5.RowCount - 1);
+                    label = new Label();
+                    label.Text = teams_temp[i].c_name;
+                    tableLayoutPanel5.Controls.Add(label, 2, tableLayoutPanel5.RowCount - 1);
+                    label = new Label();
+                    label.Text = teams_temp[i].c_1st_place.ToString();
+                    tableLayoutPanel5.Controls.Add(label, 3, tableLayoutPanel5.RowCount-1);
+                    label = new Label();
+                    label.Text = teams_temp[i].c_2nd_place.ToString();
+                    tableLayoutPanel5.Controls.Add(label, 4, tableLayoutPanel5.RowCount-1);
+                    label = new Label();
+                    label.Text = teams_temp[i].c_3rd_place.ToString();
+                    tableLayoutPanel5.Controls.Add(label, 5, tableLayoutPanel5.RowCount-1);
+                }
+            }
         }
     }
 }
