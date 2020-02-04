@@ -582,7 +582,7 @@
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(25, 18);
             this.label19.TabIndex = 18;
-            this.label19.Text = "+4";
+            this.label19.Text = "+3";
             // 
             // label69
             // 
@@ -1137,7 +1137,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(731, 486);
+            this.ClientSize = new System.Drawing.Size(715, 486);
             this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label200);

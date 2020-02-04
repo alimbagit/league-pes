@@ -77,9 +77,8 @@ namespace LeaguePES
         public struct Config
         {
             public int current_season;
-            public bool end_current_season;
-
         }
+
         private static int m_CountRounds = 9;
         private static int m_SizeOneRound = 5;
 
@@ -132,7 +131,7 @@ namespace LeaguePES
             {
                 MessageBox.Show("Завершите текущий сезон!");
             }
-}
+        }
 
         public void CreateNewSeason(Form2 f)
         {
@@ -158,7 +157,6 @@ namespace LeaguePES
         {
             StreamReader sr = new StreamReader("config.txt");
             m_Config.current_season = int.Parse(sr.ReadLine());
-            m_Config.end_current_season = int.Parse(sr.ReadLine())==1;
             sr.Close();
             UpdateSeasonLables();
         }
@@ -167,7 +165,6 @@ namespace LeaguePES
         {
             StreamWriter sw = new StreamWriter("config.txt");
             sw.WriteLine( m_Config.current_season.ToString());
-            sw.WriteLine(m_Config.end_current_season ? "1" :"0");
             sw.Close();
         }
 
@@ -351,6 +348,15 @@ namespace LeaguePES
             return -1;
         }
 
+        private int TeamSearchById(List<Team> teams, int id)
+        {
+            for (int i = 0; i < teams.Count; i++)
+            {
+                if (teams[i].c_id == id) return i;
+            }
+            return -1;
+        }
+
         private Team[] TeamsSort(Team[] teams)
         {
             Team t;
@@ -512,7 +518,6 @@ namespace LeaguePES
             {
                 if (m_TeamsPremier[i].c_games < m_CountRounds || m_TeamsTwo[i].c_games < m_CountRounds) is_end = false;
             }
-            m_Config.end_current_season = is_end;
             return is_end;
         }
 
@@ -520,14 +525,11 @@ namespace LeaguePES
         {
             TextBox txtBx=(TextBox)sender;
             string[] text = txtBx.Text.Split(':');
-            if (txtBx.Text.Length == 3 && text.Length == 2)
-            {
-                    SetScoreMatch(txtBx, txtBx.Parent.Name);
-            }
-            else
+            if (txtBx.Text.Length != 3 || text.Length != 2)
             {
                 txtBx.Text = "";
             }
+            SetScoreMatch(txtBx, txtBx.Parent.Name);
         }
 
         private void SetScoreMatch(TextBox txtbx, string table_layout)
@@ -540,9 +542,18 @@ namespace LeaguePES
                     int match_index=MatchSearchByTxtBx(round, txtbx.Name);
                     if (match_index != -1)
                     {
-                        round.matches[match_index].score_team1 = int.Parse( text[0]);
-                        round.matches[match_index].score_team2 = int.Parse(text[1]);
-                        round.matches[match_index].is_played = 1;
+                        if (txtbx.Text == "")
+                        {
+                            round.matches[match_index].score_team1 = 0;
+                            round.matches[match_index].score_team2 = 0;
+                            round.matches[match_index].is_played = 0;
+                        }
+                        else
+                        {
+                            round.matches[match_index].score_team1 = int.Parse(text[0]);
+                            round.matches[match_index].score_team2 = int.Parse(text[1]);
+                            round.matches[match_index].is_played = 1;
+                        }
                         break;
                     }
                 }
@@ -556,9 +567,18 @@ namespace LeaguePES
                     int match_index = MatchSearchByTxtBx(round, txtbx.Name);
                     if (match_index != -1)
                     {
-                        round.matches[match_index].score_team1 = int.Parse(text[0]);
-                        round.matches[match_index].score_team2 = int.Parse(text[1]);
-                        round.matches[match_index].is_played = 1;
+                        if (txtbx.Text == "")
+                        {
+                            round.matches[match_index].score_team1 = 0;
+                            round.matches[match_index].score_team2 = 0;
+                            round.matches[match_index].is_played = 0;
+                        }
+                        else
+                        {
+                            round.matches[match_index].score_team1 = int.Parse(text[0]);
+                            round.matches[match_index].score_team2 = int.Parse(text[1]);
+                            round.matches[match_index].is_played = 1;
+                        }
                         break;
                     }
                 }
@@ -611,30 +631,63 @@ namespace LeaguePES
             m_TeamsPremier = teams;
         }
 
+
+        //Установить чемпионские очки (используется в конце сезона)
+        public void CalculateChampionScore()
+        {
+            Team team;
+            for(int i = 0; i < m_TeamsPremier.Length; i++)
+            {
+                team = m_TeamsAll[TeamSearchById(m_TeamsAll, m_TeamsPremier[i].c_id)];
+                if (i == 0)
+                {
+                    team.c_champion_score += 25;
+                    team.c_1st_place += 1;
+                }
+                else if (i == 1)
+                {
+                    team.c_champion_score += 5;
+                    team.c_2nd_place += 1;
+                }
+                else if (i == 2)
+                {
+                    team.c_champion_score += 1;
+                    team.c_3rd_place += 1;
+                }
+                m_TeamsAll[TeamSearchById(m_TeamsAll, m_TeamsPremier[i].c_id)] = team;
+            }
+        }
+
         private void FillChampionTeams()
         {
+            //Очистка таблицы чемпионов от пустых ячеек
             for(int i = 1; i < tableLayoutPanel5.RowCount; i++)
             {
                 for(int j = 0; j < tableLayoutPanel5.ColumnCount; j++)
                 {
                     tableLayoutPanel5.Controls.Remove(tableLayoutPanel5.GetControlFromPosition(j, i));
                 }
-                //tableLayoutPanel5.Size = new Size(tableLayoutPanel5.Size.Width, tableLayoutPanel5.Size.Height);
             }
 
 
             List<Team> teams_temp = m_TeamsAll;
 
+            //Сортировка общего списка команд по чемпионским очкам
             Team t;
-            for(int i = 1; i < teams_temp.Count; i++)
+            for (int j = 0; j < teams_temp.Count; j++)
             {
-                if (teams_temp[i-1].c_champion_score < teams_temp[i].c_champion_score)
+                for (int i = 1; i < teams_temp.Count; i++)
                 {
-                    t = teams_temp[i - 1];
-                    teams_temp[i - 1] = teams_temp[i];
-                    teams_temp[i] = t;
+                    if (teams_temp[i - 1].c_champion_score < teams_temp[i].c_champion_score)
+                    {
+                        t = teams_temp[i - 1];
+                        teams_temp[i - 1] = teams_temp[i];
+                        teams_temp[i] = t;
+                    }
                 }
             }
+
+            //Вывод в таблицу отсортированного списка чемпионов
             int champions_count = 0;
             for (int i=0; i < teams_temp.Count; i++)
             {

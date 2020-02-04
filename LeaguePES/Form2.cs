@@ -78,6 +78,7 @@ namespace LeaguePES
 
         private void button1_Click(object sender, EventArgs e)
         {
+            m_MainForm.CalculateChampionScore();
             m_TeamsPremier=CheckNewTeams(tableLayoutPanel1,true);
             m_TeamsTwo=CheckNewTeams(tableLayoutPanel2,false);
             m_MainForm.CreateNewSeason(this);
@@ -88,62 +89,60 @@ namespace LeaguePES
         {
             
             Form1.Team[] new_teams=new Form1.Team[tableLayout.RowCount - 1];
-            
-            for(int i = 0; i < tableLayout.RowCount-1; i++)
+
+            Form1.Team t;
+
+            for (int i = 0; i < m_MainForm.m_TeamsAll.Count; i++)
+            {
+                t = m_MainForm.m_TeamsAll[i];
+                t.c_bonus_score = 0;
+                m_MainForm.m_TeamsAll[i] = t;
+            }
+
+
+            for (int i = 0; i < tableLayout.RowCount - 1; i++)
             {
                 bool is_contains = false;
-                for (int j=0;j< m_MainForm.m_TeamsAll.Count;j++)
+                for (int j = 0; j < m_MainForm.m_TeamsAll.Count; j++)
                 {
-                    if(tableLayout.GetControlFromPosition(1, i + 1).Text == m_MainForm.m_TeamsAll[j].c_owner && tableLayout.GetControlFromPosition(2, i + 1).Text == m_MainForm.m_TeamsAll[j].c_name)
+                    if (tableLayout.GetControlFromPosition(1, i + 1).Text == m_MainForm.m_TeamsAll[j].c_owner && tableLayout.GetControlFromPosition(2, i + 1).Text == m_MainForm.m_TeamsAll[j].c_name)
                     {
                         new_teams[i] = m_MainForm.m_TeamsAll[j];
                         is_contains = true;
-                        if (bonus)
-                        {
-                            if (i == 0)
-                            {
-                                new_teams[i].c_bonus_score = 4;
-                                new_teams[i].c_1st_place += 1;
-                                new_teams[i].c_champion_score += 10;
-                            }
-                            else if (i == 1)
-                            {
-                                new_teams[i].c_bonus_score = 2;
-                                new_teams[i].c_2nd_place += 1;
-                                new_teams[i].c_champion_score += 3;
-                            }
-                            else if (i == 2)
-                            {
-                                new_teams[i].c_bonus_score = 1;
-                                new_teams[i].c_3rd_place += 1;
-                                new_teams[i].c_champion_score += 1;
-                            }
-                        }
-                        else
-                        {
-                            if (i <= new_teams.Length - 1 && i >= new_teams.Length - 3)
-                            {
-                                new_teams[i].c_bonus_score = -2;
-                            }
-                        }
-                        m_MainForm.m_TeamsAll[j] = new_teams[i];
                         break;
                     }
                 }
+
                 if (!is_contains)
                 {
                     new_teams[i] = CreateNewTeam(tableLayout.GetControlFromPosition(1, i + 1).Text, tableLayout.GetControlFromPosition(2, i + 1).Text, m_MainForm.m_TeamsAll.Count + 1);
-                    if (!bonus)
-                    {
-                        if (i <= new_teams.Length - 1 && i >= new_teams.Length - 3)
-                        {
-                            new_teams[i].c_bonus_score = -2;
-                        }
-                    }
                     m_MainForm.m_TeamsAll.Add(new_teams[i]);
                 }
 
-                
+                if (bonus)
+                {
+                    if (i == 0)
+                    {
+                        new_teams[i].c_bonus_score = 3;
+                    }
+                    else if (i == 1)
+                    {
+                        new_teams[i].c_bonus_score = 2;
+                    }
+                    else if (i == 2)
+                    {
+                        new_teams[i].c_bonus_score = 1;
+                    }
+                    else new_teams[i].c_bonus_score = 0;
+                }
+                else
+                {
+                    if (i <= new_teams.Length - 1 && i >= new_teams.Length - 3)
+                    {
+                        new_teams[i].c_bonus_score = -2;
+                    }
+                    else new_teams[i].c_bonus_score = 0;
+                }
             }
 
             return new_teams;
