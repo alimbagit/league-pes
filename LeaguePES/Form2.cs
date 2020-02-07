@@ -36,21 +36,21 @@ namespace LeaguePES
                 tableLayoutPanel1.GetControlFromPosition(1, i + 1).Text = m_MainForm.m_TeamsPremier[i].c_owner;
                 tableLayoutPanel1.GetControlFromPosition(2, i + 1).Text = m_MainForm.m_TeamsPremier[i].c_name;
 
-                if(i==m_MainForm.m_TeamsPremier.Length-3)
-                {
-                    tableLayoutPanel1.GetControlFromPosition(1, i + 1).Text = m_MainForm.m_TeamsTwo[0].c_owner;
-                    tableLayoutPanel1.GetControlFromPosition(2, i + 1).Text = m_MainForm.m_TeamsTwo[0].c_name;
-                }
-                else if (i == m_MainForm.m_TeamsPremier.Length - 2)
-                {
-                    tableLayoutPanel1.GetControlFromPosition(1, i + 1).Text = m_MainForm.m_TeamsTwo[1].c_owner;
-                    tableLayoutPanel1.GetControlFromPosition(2, i + 1).Text = m_MainForm.m_TeamsTwo[1].c_name;
-                }
-                else if (i == m_MainForm.m_TeamsPremier.Length - 1)
-                {
-                    tableLayoutPanel1.GetControlFromPosition(1, i + 1).Text = m_MainForm.m_TeamsTwo[2].c_owner;
-                    tableLayoutPanel1.GetControlFromPosition(2, i + 1).Text = m_MainForm.m_TeamsTwo[2].c_name;
-                }
+                //if(i==m_MainForm.m_TeamsPremier.Length-3)
+                //{
+                //    tableLayoutPanel1.GetControlFromPosition(1, i + 1).Text = m_MainForm.m_TeamsTwo[0].c_owner;
+                //    tableLayoutPanel1.GetControlFromPosition(2, i + 1).Text = m_MainForm.m_TeamsTwo[0].c_name;
+                //}
+                //else if (i == m_MainForm.m_TeamsPremier.Length - 2)
+                //{
+                //    tableLayoutPanel1.GetControlFromPosition(1, i + 1).Text = m_MainForm.m_TeamsTwo[1].c_owner;
+                //    tableLayoutPanel1.GetControlFromPosition(2, i + 1).Text = m_MainForm.m_TeamsTwo[1].c_name;
+                //}
+                //else if (i == m_MainForm.m_TeamsPremier.Length - 1)
+                //{
+                //    tableLayoutPanel1.GetControlFromPosition(1, i + 1).Text = m_MainForm.m_TeamsTwo[2].c_owner;
+                //    tableLayoutPanel1.GetControlFromPosition(2, i + 1).Text = m_MainForm.m_TeamsTwo[2].c_name;
+                //}
             }
 
             for (int i = 0; i < m_MainForm.m_TeamsTwo.Length; i++)
@@ -58,21 +58,21 @@ namespace LeaguePES
                 tableLayoutPanel2.GetControlFromPosition(1, i + 1).Text = m_MainForm.m_TeamsTwo[i].c_owner;
                 tableLayoutPanel2.GetControlFromPosition(2, i + 1).Text = m_MainForm.m_TeamsTwo[i].c_name;
 
-                if (i == 0)
-                {
-                    tableLayoutPanel2.GetControlFromPosition(1, i + 1).Text = m_MainForm.m_TeamsPremier[m_MainForm.m_TeamsPremier.Length-3].c_owner;
-                    tableLayoutPanel2.GetControlFromPosition(2, i + 1).Text = m_MainForm.m_TeamsPremier[m_MainForm.m_TeamsPremier.Length - 3].c_name;
-                }
-                else if (i == 1)
-                {
-                    tableLayoutPanel2.GetControlFromPosition(1, i + 1).Text = m_MainForm.m_TeamsPremier[m_MainForm.m_TeamsPremier.Length - 2].c_owner;
-                    tableLayoutPanel2.GetControlFromPosition(2, i + 1).Text = m_MainForm.m_TeamsPremier[m_MainForm.m_TeamsPremier.Length - 2].c_name;
-                }
-                else if (i == 2)
-                {
-                    tableLayoutPanel2.GetControlFromPosition(1, i + 1).Text = m_MainForm.m_TeamsPremier[m_MainForm.m_TeamsPremier.Length - 1].c_owner;
-                    tableLayoutPanel2.GetControlFromPosition(2, i + 1).Text = m_MainForm.m_TeamsPremier[m_MainForm.m_TeamsPremier.Length - 1].c_name;
-                }
+                //if (i == 0)
+                //{
+                //    tableLayoutPanel2.GetControlFromPosition(1, i + 1).Text = m_MainForm.m_TeamsPremier[m_MainForm.m_TeamsPremier.Length-3].c_owner;
+                //    tableLayoutPanel2.GetControlFromPosition(2, i + 1).Text = m_MainForm.m_TeamsPremier[m_MainForm.m_TeamsPremier.Length - 3].c_name;
+                //}
+                //else if (i == 1)
+                //{
+                //    tableLayoutPanel2.GetControlFromPosition(1, i + 1).Text = m_MainForm.m_TeamsPremier[m_MainForm.m_TeamsPremier.Length - 2].c_owner;
+                //    tableLayoutPanel2.GetControlFromPosition(2, i + 1).Text = m_MainForm.m_TeamsPremier[m_MainForm.m_TeamsPremier.Length - 2].c_name;
+                //}
+                //else if (i == 2)
+                //{
+                //    tableLayoutPanel2.GetControlFromPosition(1, i + 1).Text = m_MainForm.m_TeamsPremier[m_MainForm.m_TeamsPremier.Length - 1].c_owner;
+                //    tableLayoutPanel2.GetControlFromPosition(2, i + 1).Text = m_MainForm.m_TeamsPremier[m_MainForm.m_TeamsPremier.Length - 1].c_name;
+                //}
             }
         }
 
@@ -119,30 +119,24 @@ namespace LeaguePES
                     m_MainForm.m_TeamsAll.Add(new_teams[i]);
                 }
 
-                if (bonus)
+                if (i == 0)
                 {
-                    if (i == 0)
-                    {
-                        new_teams[i].c_bonus_score = 3;
-                    }
-                    else if (i == 1)
-                    {
-                        new_teams[i].c_bonus_score = 2;
-                    }
-                    else if (i == 2)
-                    {
-                        new_teams[i].c_bonus_score = 1;
-                    }
-                    else new_teams[i].c_bonus_score = 0;
+                    new_teams[i].c_bonus_score = 1;
                 }
-                else
+                else if (i == 1)
                 {
-                    if (i <= new_teams.Length - 1 && i >= new_teams.Length - 3)
-                    {
-                        new_teams[i].c_bonus_score = -2;
-                    }
-                    else new_teams[i].c_bonus_score = 0;
+                    new_teams[i].c_bonus_score = 1;
                 }
+                else if (i == 2)
+                {
+                    new_teams[i].c_bonus_score = 1;
+                }
+                else if (i <= new_teams.Length - 1 && i >= new_teams.Length - 3)
+                {
+                    new_teams[i].c_bonus_score = -2;
+                }
+                else new_teams[i].c_bonus_score = 0;
+
             }
 
             return new_teams;

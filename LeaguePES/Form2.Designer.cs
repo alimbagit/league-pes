@@ -345,9 +345,9 @@
             this.label4.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label4.Location = new System.Drawing.Point(223, 276);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(16, 18);
+            this.label4.Size = new System.Drawing.Size(21, 18);
             this.label4.TabIndex = 60;
-            this.label4.Text = "0";
+            this.label4.Text = "-2";
             // 
             // label115
             // 
@@ -367,9 +367,9 @@
             this.label114.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label114.Location = new System.Drawing.Point(223, 246);
             this.label114.Name = "label114";
-            this.label114.Size = new System.Drawing.Size(16, 18);
+            this.label114.Size = new System.Drawing.Size(21, 18);
             this.label114.TabIndex = 114;
-            this.label114.Text = "0";
+            this.label114.Text = "-2";
             // 
             // label106
             // 
@@ -490,7 +490,7 @@
             this.label60.Name = "label60";
             this.label60.Size = new System.Drawing.Size(25, 18);
             this.label60.TabIndex = 60;
-            this.label60.Text = "+2";
+            this.label60.Text = "+1";
             // 
             // label10
             // 
@@ -582,7 +582,7 @@
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(25, 18);
             this.label19.TabIndex = 18;
-            this.label19.Text = "+3";
+            this.label19.Text = "+1";
             // 
             // label69
             // 
@@ -602,9 +602,9 @@
             this.label21.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label21.Location = new System.Drawing.Point(223, 307);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(16, 18);
+            this.label21.Size = new System.Drawing.Size(21, 18);
             this.label21.TabIndex = 20;
-            this.label21.Text = "0";
+            this.label21.Text = "-2";
             // 
             // textBox1
             // 
@@ -1008,9 +1008,9 @@
             this.label23.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label23.Location = new System.Drawing.Point(223, 66);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(16, 18);
+            this.label23.Size = new System.Drawing.Size(25, 18);
             this.label23.TabIndex = 60;
-            this.label23.Text = "0";
+            this.label23.Text = "+1";
             // 
             // label24
             // 
@@ -1100,9 +1100,9 @@
             this.label32.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label32.Location = new System.Drawing.Point(223, 36);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(16, 18);
+            this.label32.Size = new System.Drawing.Size(25, 18);
             this.label32.TabIndex = 18;
-            this.label32.Text = "0";
+            this.label32.Text = "+1";
             // 
             // label33
             // 
@@ -1111,9 +1111,9 @@
             this.label33.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label33.Location = new System.Drawing.Point(223, 96);
             this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(16, 18);
+            this.label33.Size = new System.Drawing.Size(25, 18);
             this.label33.TabIndex = 69;
-            this.label33.Text = "0";
+            this.label33.Text = "+1";
             // 
             // label34
             // 
