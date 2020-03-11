@@ -48,7 +48,7 @@ namespace LeaguePES
                 score_team1 = 0;
                 score_team2 = 0;
                 is_played = 0;
-                textbox = "";
+                row_number = 0;
             }
 
             public int team1;
@@ -56,12 +56,28 @@ namespace LeaguePES
             public int score_team1;
             public int score_team2;
             public int is_played;
-            public string textbox;
+            public int row_number;
         }
+
+        private int[,] m_TemplateCalendar9 = {
+            {4,6},{7,3 },{5,0 },{2,1 },
+            {6,8 }, {3,0 }, {7,5 }, {4,2}, 
+            {8,3 }, {6,1}, {4,5 }, {7,2}, 
+            {8,0 }, {4,1}, {3,2 }, {6,7 }, 
+            {8,5 }, {6,2 }, {7,0 }, {3,1 }, 
+            {5,2 }, {8,1 }, {4,3}, {6,0 }, 
+            {4,8 }, {3,5}, {0,2}, {7,1}, 
+            {6,3},{4,0},{5,1},{8,7},
+            {6,5},{4,7},{8,2},{0,1}};
+
+        private int[,] m_TemplateCalendar10 = {{4, 6},{8,9 },{7,3 },{5,0 },{2,1 },{6,8 },{3,0 }, {9,1 }, {7,5 }, {4,2 }, {9,0 } ,
+            {8,3 }, {6,1 }, {4,5 }, { 7,2}, {8,0 } , {9,5 }, {4,1 }, {3,2 }, {6,7 }, {8,5 } , {6,2 }, {7,0 }, {4,9 }, {3,1 }, {9,7 } , {5,2 }, {8,1 },
+            {4,3 }, {6,0 }, {4,8 },{3,5},{0,2},{6,9},{7,1},{6,3},{4,0},{9,2},{5,1},{8,7},{6,5},{9,3},{4,7},{8,2},{0,1}};
 
         private int[,] m_TemplateCalendar = {{4, 6},{8,9 },{7,3 },{5,0 },{2,1 },{6,8 },{3,0 }, {9,1 }, {7,5 }, {4,2 }, {9,0 } ,
             {8,3 }, {6,1 }, {4,5 }, { 7,2}, {8,0 } , {9,5 }, {4,1 }, {3,2 }, {6,7 }, {8,5 } , {6,2 }, {7,0 }, {4,9 }, {3,1 }, {9,7 } , {5,2 }, {8,1 },
             {4,3 }, {6,0 }, {4,8 },{3,5},{0,2},{6,9},{7,1},{6,3},{4,0},{9,2},{5,1},{8,7},{6,5},{9,3},{4,7},{8,2},{0,1}};
+
 
         private class Round
         {
@@ -77,48 +93,69 @@ namespace LeaguePES
         public struct Config
         {
             public int current_season;
+            public int count_teams;
+            public int size_one_round;
         }
 
         private static int m_CountRounds = 9;
-        private static int m_SizeOneRound = 5;
 
         public List<Team> m_TeamsAll = new List<Team>();
-        public Team[] m_TeamsPremier= new Team[10];
-        public Team[] m_TeamsTwo= new Team[10];
+        //public Team[] m_TeamsPremier= new Team[10];
+        //public Team[] m_TeamsTwo= new Team[10];
+        public Team[] m_TeamsPremier;
+        public Team[] m_TeamsTwo;
 
         private List<Round> m_RoundsPremierLeague = new List<Round>();
         private List<Round> m_RoundsTwoLeague = new List<Round>();
 
-        private Config m_Config;
+        public Config m_Config;
 
 
         private void Form1_Load(object sender, EventArgs e)
         {
             LoadConfig();
+            InitializeTeamsArray(); //Объявление массивов текущей таблицы
             FileTeamsLoad(); //Чтение текущих команд из файла
             m_TeamsAll= FileAllTeamsLoad(); //Чтение всех команд из файла
 
             m_RoundsPremierLeague = FileRoundsRead(m_Config.current_season,1); //Чтение раундов матчей из файла
-            m_RoundsTwoLeague = FileRoundsRead(m_Config.current_season, 2);
-            //m_RoundsTwoLeague = CreateTimeTable(m_TeamsTwo, m_CountRounds, m_SizeOneRound); 
-            m_TeamsPremier =MatchesCalculation(m_RoundsPremierLeague, m_TeamsPremier);
+            m_RoundsTwoLeague = FileRoundsRead(m_Config.current_season, 2); 
+            m_TeamsPremier =MatchesCalculation(m_RoundsPremierLeague, m_TeamsPremier); //расчет таблиц по результатам матчей
             m_TeamsTwo = MatchesCalculation(m_RoundsTwoLeague, m_TeamsTwo);
-            FillTable(tableLayoutPanel1,m_TeamsPremier);
+            FillTable(tableLayoutPanel1,m_TeamsPremier); //заполнение таблиц
             FillTable(tableLayoutPanel2, m_TeamsTwo);
-            FillCalendar(tableLayoutPanel3, m_RoundsPremierLeague, m_TeamsPremier);
+            FillCalendar(tableLayoutPanel3, m_RoundsPremierLeague, m_TeamsPremier); //заполнение календаря игр
             FillCalendar(tableLayoutPanel4, m_RoundsTwoLeague, m_TeamsTwo);
-            FillChampionTeams();
+            FillChampionTeams(); //заполнение таблицы чемпионов
         }
 
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        private void InitializeTeamsArray()
+        {
+            m_TeamsPremier = new Team[m_Config.count_teams];
+            m_TeamsTwo = new Team[m_Config.count_teams];
+        }
+
+    private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             SaveConfig();
             FileCurrentTeamsSave();
             SaveCurrentSeasonToFile();
-
         }
 
-
+        private void SetCountTeams(int count_teams)
+        {
+            m_Config.count_teams = count_teams;
+            if (count_teams == 9)
+            {
+                m_Config.size_one_round = 4;
+                m_TemplateCalendar = m_TemplateCalendar9;
+            }
+            else if (count_teams == 10)
+            {
+                m_Config.size_one_round = 5;
+                m_TemplateCalendar = m_TemplateCalendar10;
+            }
+        }
 
         private void buttonNewSeason_Click(object sender, EventArgs e)
         {
@@ -136,11 +173,13 @@ namespace LeaguePES
         public void CreateNewSeason(Form2 f)
         {
             SaveCurrentSeasonToFile();
+            SetCountTeams(f.m_CountTeams);
             m_Config.current_season++;
             m_TeamsPremier = f.m_TeamsPremier;
             m_TeamsTwo = f.m_TeamsTwo;
-            m_RoundsPremierLeague = CreateTimeTable(m_TeamsPremier, m_CountRounds, m_SizeOneRound);
-            m_RoundsTwoLeague = CreateTimeTable(m_TeamsTwo, m_CountRounds, m_SizeOneRound);
+
+            m_RoundsPremierLeague = CreateTimeTable(m_TeamsPremier, m_CountRounds, m_Config.size_one_round);
+            m_RoundsTwoLeague = CreateTimeTable(m_TeamsTwo, m_CountRounds, m_Config.size_one_round);
             m_TeamsPremier = MatchesCalculation(m_RoundsPremierLeague, m_TeamsPremier);
             m_TeamsTwo = MatchesCalculation(m_RoundsTwoLeague, m_TeamsTwo);
 
@@ -157,6 +196,8 @@ namespace LeaguePES
         {
             StreamReader sr = new StreamReader("config.txt");
             m_Config.current_season = int.Parse(sr.ReadLine());
+            m_Config.count_teams= int.Parse(sr.ReadLine());
+            m_Config.size_one_round = int.Parse(sr.ReadLine());
             sr.Close();
             UpdateSeasonLables();
         }
@@ -165,6 +206,8 @@ namespace LeaguePES
         {
             StreamWriter sw = new StreamWriter("config.txt");
             sw.WriteLine( m_Config.current_season.ToString());
+            sw.WriteLine(m_Config.count_teams.ToString());
+            sw.WriteLine(m_Config.size_one_round.ToString());
             sw.Close();
         }
 
@@ -182,8 +225,8 @@ namespace LeaguePES
             while (!sr.EndOfStream)
             {
                 table_line = sr.ReadLine().Split(' ');
-                if (i < 10) m_TeamsPremier[i]= CreateOneTeam( table_line);
-                else m_TeamsTwo[i-10]=CreateOneTeam(table_line);
+                if (i < m_Config.count_teams) m_TeamsPremier[i]= CreateOneTeam( table_line);
+                else m_TeamsTwo[i-m_Config.count_teams]=CreateOneTeam(table_line);
                 i++;
             }
             sr.Close();
@@ -265,7 +308,7 @@ namespace LeaguePES
             while (!sr.EndOfStream)
             {
                 Match one_match = new Match();
-                if (one_round.matches.Count < m_SizeOneRound)
+                if (one_round.matches.Count < m_Config.size_one_round)
                 {
                     line = sr.ReadLine().Split(' ');
                     one_match.team1 = int.Parse(line[0]);
@@ -413,45 +456,119 @@ namespace LeaguePES
 
         private void FillTable(TableLayoutPanel tableLayout, Team[] teams)
         {
-            for (int row=0; row < teams.Length; row++)
+            //Очистка таблицы от пустых ячеек
+            for (int i = 1; i < tableLayout.RowCount; i++)
             {
-                tableLayout.GetControlFromPosition(1, row+1).Text = teams[row].c_owner;
-                tableLayout.GetControlFromPosition(2, row+1).Text = teams[row].c_name;
-                tableLayout.GetControlFromPosition(3, row+1).Text = teams[row].c_games.ToString();
-                tableLayout.GetControlFromPosition(4, row+1).Text = teams[row].c_wins.ToString();
-                tableLayout.GetControlFromPosition(5, row+1).Text = teams[row].c_draws.ToString();
-                tableLayout.GetControlFromPosition(6, row+1).Text = teams[row].c_loses.ToString();
-                tableLayout.GetControlFromPosition(7, row+1).Text = teams[row].c_goals_scored.ToString() + "-" + teams[row].c_goals_conceded.ToString();
-                tableLayout.GetControlFromPosition(8, row+1).Text = teams[row].c_score.ToString();
+                for (int j = 0; j < tableLayout.ColumnCount; j++)
+                {
+                    tableLayout.Controls.Remove(tableLayout.GetControlFromPosition(j, i));
+                }
+            }
+            tableLayout.RowCount = 1;
+            //Создание таблицы
+            tableLayout.Size = new Size(tableLayout.Size.Width, 40);
+            tableLayout.RowStyles[0].SizeType = SizeType.Absolute;
+            tableLayout.RowStyles[0].Height = 30;
+            for (int row = 0; row < teams.Length; row++)
+            {
+                tableLayout.Size = new Size(tableLayout.Size.Width, tableLayout.Size.Height + 23);
+                tableLayout.RowCount++;
+
+                for(int col = 0; col < 9; col++)
+                {
+                    Label label = new Label();
+                    label.Font = new Font("Microsoft Sans Serif", 12f);
+                    if (row < 3) label.ForeColor = Color.FromArgb(0, 0, 120);
+                    else if(row>=m_Config.count_teams-3) label.ForeColor = Color.FromArgb(120, 0, 0);
+                    tableLayout.Controls.Add(label, col, tableLayout.RowCount - 1);
+                }
+            }
+
+
+            //Вывод в таблицу отсортированного списка команд
+            for (int row = 0; row < teams.Length; row++)
+            {
+                tableLayout.GetControlFromPosition(0, row + 1).Text = (row + 1).ToString();
+                tableLayout.GetControlFromPosition(1, row + 1).Text = teams[row].c_owner;
+                tableLayout.GetControlFromPosition(2, row + 1).Text = teams[row].c_name;
+                tableLayout.GetControlFromPosition(3, row + 1).Text = teams[row].c_games.ToString();
+                tableLayout.GetControlFromPosition(4, row + 1).Text = teams[row].c_wins.ToString();
+                tableLayout.GetControlFromPosition(5, row + 1).Text = teams[row].c_draws.ToString();
+                tableLayout.GetControlFromPosition(6, row + 1).Text = teams[row].c_loses.ToString();
+                tableLayout.GetControlFromPosition(7, row + 1).Text = teams[row].c_goals_scored.ToString() + "-" + teams[row].c_goals_conceded.ToString();
+                tableLayout.GetControlFromPosition(8, row + 1).Text = teams[row].c_score.ToString();
             }
         }
 
         private void FillCalendar(TableLayoutPanel tableLayout, List<Round> rounds, Team[] teams)
         {
+            //Очистка расписания от пустых ячеек
+            for (int i = 1; i < tableLayout.RowCount; i++)
+            {
+                for (int j = 0; j < tableLayout.ColumnCount; j++)
+                {
+                    tableLayout.Controls.Remove(tableLayout.GetControlFromPosition(j, i));
+                }
+            }
+            tableLayout.RowCount = 1;
+            tableLayout.Size = new Size(tableLayout.Size.Width, 0);
+
+            //Заполнение расписания
             int row = 0;
             for(int round=0;round<rounds.Count;round++)
             {
-                Control lab = tableLayout.GetControlFromPosition(0, row);
-                tableLayout.GetControlFromPosition(0, row).Font= new Font(lab.Font, lab.Font.Style ^ FontStyle.Bold);
-                tableLayout.GetControlFromPosition(0, row).Text= "Тур " + (round+1).ToString();
-                tableLayout.GetControlFromPosition(1, row).Visible = false;
-                tableLayout.GetControlFromPosition(2, row).Visible = false;
+                tableLayout.RowStyles[0].SizeType = SizeType.Absolute;
+                tableLayout.RowStyles[0].Height = 30;
+                tableLayout.Size = new Size(tableLayout.Size.Width, tableLayout.Size.Height + 23);
+                tableLayout.RowCount++;
+                Label label = new Label();
+                label.Font = new Font("Microsoft Sans Serif", 11f, FontStyle.Bold);
+                label.Anchor = AnchorStyles.Right;
+                label.AutoSize = true;
+                tableLayout.Controls.Add(label, 0, row);
+                label.Text= "Тур " + (round + 1).ToString();
+
                 row++;
+                
                 foreach(Match match in rounds[round].matches)
                 {
+                    tableLayout.Size = new Size(tableLayout.Size.Width, tableLayout.Size.Height + 30);
+                    tableLayout.RowCount++;
+                    
+
                     int m = TeamSearchById(teams, match.team1);
-                    tableLayout.GetControlFromPosition(0, row).Text = "("+teams[m].c_owner+") "+ teams[m].c_name;
+                    label = new Label();
+                    label.Text = "(" + teams[m].c_owner + ") " + teams[m].c_name;
+                    label.Font = new Font("Microsoft Sans Serif", 11f);
+                    label.Anchor = AnchorStyles.Right;
+                    label.AutoSize = true;
+                    tableLayout.Controls.Add(label, 0, row);
+
                     m = TeamSearchById(teams, match.team2);
-                    tableLayout.GetControlFromPosition(2, row).Text = "(" + teams[m].c_owner + ") " + teams[m].c_name;
+                    label = new Label();
+                    label.Text = "(" + teams[m].c_owner + ") " + teams[m].c_name;
+                    label.Font = new Font("Microsoft Sans Serif", 11f);
+                    label.Anchor = AnchorStyles.Left;
+                    label.AutoSize = true;
+                    tableLayout.Controls.Add(label, 2, row);
+
+                    TextBox txtbx=new TextBox();
+                    txtbx.Font = new Font("Microsoft Sans Serif", 11f);
+                    txtbx.Leave += new EventHandler(Text_Score_Leave);
+                    txtbx.KeyPress += new KeyPressEventHandler(TextBoxFilter);
+                    txtbx.AutoSize = true;
+                    txtbx.TextAlign = HorizontalAlignment.Center;
+
                     if (match.is_played == 1)
                     {
-                        tableLayout.GetControlFromPosition(1, row).Text = match.score_team1 + ":" + match.score_team2;
+                        txtbx.Text = match.score_team1 + ":" + match.score_team2;
                     }
                     else if (match.is_played == 0)
                     {
-                        tableLayout.GetControlFromPosition(1, row).Text = "";
+                        txtbx.Text = "";
                     }
-                    match.textbox = tableLayout.GetControlFromPosition(1, row).Name;
+                    tableLayout.Controls.Add(txtbx, 1, row);
+                    match.row_number = row;
                     row++;
                 }
             }
@@ -489,7 +606,7 @@ namespace LeaguePES
             List<Round> rounds = new List<Round>();
             List<Match> temp_matches = new List<Match>();
 
-            for(int i = 0; i < m_SizeOneRound*m_CountRounds; i++)
+            for(int i = 0; i < m_Config.size_one_round*m_CountRounds; i++)
             {
                 Match match = new Match();
                 match.team1 = teams[m_TemplateCalendar[i,0]].c_id;
@@ -524,22 +641,25 @@ namespace LeaguePES
         private void Text_Score_Leave(object sender, EventArgs e)
         {
             TextBox txtBx=(TextBox)sender;
+
             string[] text = txtBx.Text.Split(':');
             if (txtBx.Text.Length != 3 || text.Length != 2)
             {
                 txtBx.Text = "";
             }
-            SetScoreMatch(txtBx, txtBx.Parent.Name);
+            TableLayoutPanel tableLayout =(TableLayoutPanel) txtBx.Parent;
+            int row_number = tableLayout.GetRow(txtBx);
+            SetScoreMatch(row_number,txtBx);
         }
 
-        private void SetScoreMatch(TextBox txtbx, string table_layout)
+        private void SetScoreMatch(int row_number, TextBox txtbx)
         {
             string[] text = txtbx.Text.Split(':');
-            if (table_layout == tableLayoutPanel3.Name)
+            if (txtbx.Parent.Name == tableLayoutPanel3.Name)
             {
                 foreach(Round round in m_RoundsPremierLeague)
                 {
-                    int match_index=MatchSearchByTxtBx(round, txtbx.Name);
+                    int match_index=MatchSearchByTxtBx(round, row_number);
                     if (match_index != -1)
                     {
                         if (txtbx.Text == "")
@@ -560,11 +680,11 @@ namespace LeaguePES
                 MatchesCalculation(m_RoundsPremierLeague, m_TeamsPremier);
                 FillTable(tableLayoutPanel1, m_TeamsPremier);
             }
-            else if (table_layout == tableLayoutPanel4.Name)
+            else if (txtbx.Parent.Name == tableLayoutPanel4.Name)
             {
                 foreach (Round round in m_RoundsTwoLeague)
                 {
-                    int match_index = MatchSearchByTxtBx(round, txtbx.Name);
+                    int match_index = MatchSearchByTxtBx(round, row_number);
                     if (match_index != -1)
                     {
                         if (txtbx.Text == "")
@@ -587,11 +707,11 @@ namespace LeaguePES
             }
         }
 
-        private int MatchSearchByTxtBx(Round round,string name_txtbx)
+        private int MatchSearchByTxtBx(Round round,int row_number)
         {
             for(int i=0; i < round.matches.Count; i++)
             {
-                if (round.matches[i].textbox == name_txtbx) return i;
+                if (round.matches[i].row_number == row_number) return i;
             }
             return -1;
         }

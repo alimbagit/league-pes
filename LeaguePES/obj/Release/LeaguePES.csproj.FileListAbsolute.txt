@@ -8,3 +8,13 @@ D:\projects\LeaguePES\LeaguePES\obj\Release\LeaguePES.Properties.Resources.resou
 D:\projects\LeaguePES\LeaguePES\obj\Release\LeaguePES.csproj.GenerateResource.cache
 D:\projects\LeaguePES\LeaguePES\obj\Release\LeaguePES.exe
 D:\projects\LeaguePES\LeaguePES\obj\Release\LeaguePES.pdb
+D:\projects\league-pes.git\LeaguePES\bin\Release\LeaguePES.exe.config
+D:\projects\league-pes.git\LeaguePES\bin\Release\LeaguePES.exe
+D:\projects\league-pes.git\LeaguePES\bin\Release\LeaguePES.pdb
+D:\projects\league-pes.git\LeaguePES\obj\Release\LeaguePES.csprojAssemblyReference.cache
+D:\projects\league-pes.git\LeaguePES\obj\Release\LeaguePES.Form1.resources
+D:\projects\league-pes.git\LeaguePES\obj\Release\LeaguePES.Form2.resources
+D:\projects\league-pes.git\LeaguePES\obj\Release\LeaguePES.Properties.Resources.resources
+D:\projects\league-pes.git\LeaguePES\obj\Release\LeaguePES.csproj.GenerateResource.cache
+D:\projects\league-pes.git\LeaguePES\obj\Release\LeaguePES.exe
+D:\projects\league-pes.git\LeaguePES\obj\Release\LeaguePES.pdb

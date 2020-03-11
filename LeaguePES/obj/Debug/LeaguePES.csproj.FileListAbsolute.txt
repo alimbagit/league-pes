@@ -18,3 +18,13 @@ C:\Users\us\Desktop\league-pes\LeaguePES\obj\Debug\LeaguePES.exe
 C:\Users\us\Desktop\league-pes\LeaguePES\obj\Debug\LeaguePES.pdb
 C:\Users\us\Desktop\league-pes\LeaguePES\obj\Debug\LeaguePES.Form2.resources
 D:\projects\LeaguePES\LeaguePES\obj\Debug\LeaguePES.Form2.resources
+D:\projects\league-pes.git\LeaguePES\bin\Debug\LeaguePES.exe.config
+D:\projects\league-pes.git\LeaguePES\bin\Debug\LeaguePES.exe
+D:\projects\league-pes.git\LeaguePES\bin\Debug\LeaguePES.pdb
+D:\projects\league-pes.git\LeaguePES\obj\Debug\LeaguePES.csprojAssemblyReference.cache
+D:\projects\league-pes.git\LeaguePES\obj\Debug\LeaguePES.Form1.resources
+D:\projects\league-pes.git\LeaguePES\obj\Debug\LeaguePES.Form2.resources
+D:\projects\league-pes.git\LeaguePES\obj\Debug\LeaguePES.Properties.Resources.resources
+D:\projects\league-pes.git\LeaguePES\obj\Debug\LeaguePES.csproj.GenerateResource.cache
+D:\projects\league-pes.git\LeaguePES\obj\Debug\LeaguePES.exe
+D:\projects\league-pes.git\LeaguePES\obj\Debug\LeaguePES.pdb
