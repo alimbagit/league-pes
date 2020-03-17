@@ -122,8 +122,8 @@
             this.label34 = new System.Windows.Forms.Label();
             this.textBox40 = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.label35 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -352,7 +352,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(21, 18);
             this.label4.TabIndex = 60;
-            this.label4.Text = "-2";
+            this.label4.Text = "-1";
             // 
             // label115
             // 
@@ -374,7 +374,7 @@
             this.label114.Name = "label114";
             this.label114.Size = new System.Drawing.Size(21, 18);
             this.label114.TabIndex = 114;
-            this.label114.Text = "-2";
+            this.label114.Text = "-1";
             // 
             // label106
             // 
@@ -609,7 +609,7 @@
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(21, 18);
             this.label21.TabIndex = 20;
-            this.label21.Text = "-2";
+            this.label21.Text = "-1";
             // 
             // textBox1
             // 
@@ -873,7 +873,7 @@
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(21, 18);
             this.label5.TabIndex = 60;
-            this.label5.Text = "-2";
+            this.label5.Text = "-1";
             // 
             // label6
             // 
@@ -895,7 +895,7 @@
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(21, 18);
             this.label7.TabIndex = 114;
-            this.label7.Text = "-2";
+            this.label7.Text = "-1";
             // 
             // label8
             // 
@@ -1130,7 +1130,7 @@
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(21, 18);
             this.label34.TabIndex = 20;
-            this.label34.Text = "-2";
+            this.label34.Text = "-1";
             // 
             // textBox40
             // 
@@ -1149,19 +1149,6 @@
             this.groupBox1.TabIndex = 62;
             this.groupBox1.TabStop = false;
             // 
-            // radioButton1
-            // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.radioButton1.Location = new System.Drawing.Point(6, 0);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(34, 22);
-            this.radioButton1.TabIndex = 0;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "9";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
-            // 
             // radioButton2
             // 
             this.radioButton2.AutoSize = true;
@@ -1174,6 +1161,19 @@
             this.radioButton2.Text = "10";
             this.radioButton2.UseVisualStyleBackColor = true;
             this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.radioButton1.Location = new System.Drawing.Point(6, 0);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(34, 22);
+            this.radioButton1.TabIndex = 0;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "9";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
             // 
             // label35
             // 

@@ -28,3 +28,13 @@ D:\projects\league-pes.git\LeaguePES\obj\Debug\LeaguePES.Properties.Resources.re
 D:\projects\league-pes.git\LeaguePES\obj\Debug\LeaguePES.csproj.GenerateResource.cache
 D:\projects\league-pes.git\LeaguePES\obj\Debug\LeaguePES.exe
 D:\projects\league-pes.git\LeaguePES\obj\Debug\LeaguePES.pdb
+G:\projects\league_pes\LeaguePES\bin\Debug\LeaguePES.exe.config
+G:\projects\league_pes\LeaguePES\bin\Debug\LeaguePES.exe
+G:\projects\league_pes\LeaguePES\bin\Debug\LeaguePES.pdb
+G:\projects\league_pes\LeaguePES\obj\Debug\LeaguePES.csprojAssemblyReference.cache
+G:\projects\league_pes\LeaguePES\obj\Debug\LeaguePES.Form1.resources
+G:\projects\league_pes\LeaguePES\obj\Debug\LeaguePES.Form2.resources
+G:\projects\league_pes\LeaguePES\obj\Debug\LeaguePES.Properties.Resources.resources
+G:\projects\league_pes\LeaguePES\obj\Debug\LeaguePES.csproj.GenerateResource.cache
+G:\projects\league_pes\LeaguePES\obj\Debug\LeaguePES.exe
+G:\projects\league_pes\LeaguePES\obj\Debug\LeaguePES.pdb

@@ -115,7 +115,7 @@ namespace LeaguePES
                 else if (i >= tableLayout.RowCount - 4)
                 {
                     Form1.Team tt = teams_list[teams_list.Count - 1];
-                    tt.c_bonus_score = -2;
+                    tt.c_bonus_score = -1;
                     teams_list[teams_list.Count - 1] = tt;
                 }
                 else

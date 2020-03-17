@@ -467,14 +467,19 @@ namespace LeaguePES
             tableLayout.RowCount = 1;
             //Создание таблицы
             tableLayout.Size = new Size(tableLayout.Size.Width, 40);
-            tableLayout.RowStyles[0].SizeType = SizeType.Absolute;
-            tableLayout.RowStyles[0].Height = 30;
+            tableLayout.RowStyles.Clear();
             for (int row = 0; row < teams.Length; row++)
             {
                 tableLayout.Size = new Size(tableLayout.Size.Width, tableLayout.Size.Height + 23);
                 tableLayout.RowCount++;
+                RowStyle rs = new RowStyle();
+                rs.SizeType = SizeType.Absolute;
+                rs.Height = 25;
+                tableLayout.RowStyles.Add(rs);
+                //tableLayout.RowStyles[row].SizeType = SizeType.Absolute;
+                //tableLayout.RowStyles[row].Height = 30;
 
-                for(int col = 0; col < 9; col++)
+                for (int col = 0; col < 9; col++)
                 {
                     Label label = new Label();
                     label.Font = new Font("Microsoft Sans Serif", 12f);
