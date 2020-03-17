@@ -101,7 +101,7 @@ namespace LeaguePES
 
                 if (!is_contains)
                 {
-                    teams_list.Add(CreateNewTeam(tableLayout.GetControlFromPosition(1, i + 1).Text, tableLayout.GetControlFromPosition(2, i + 1).Text, m_MainForm.m_TeamsAll.Count + 1));
+                    teams_list.Add(CreateNewTeam(tableLayout.GetControlFromPosition(1, i + 1).Text, tableLayout.GetControlFromPosition(2, i + 1).Text, m_MainForm.m_TeamsAll[m_MainForm.m_TeamsAll.Count-1].c_id+1));
                     m_MainForm.m_TeamsAll.Add(teams_list[teams_list.Count - 1]);
                 }
 
